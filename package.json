@@ -1,0 +1,33 @@
+{
+  "name": "react-simple-select",
+  "version": "0.1.0",
+  "description": "A simple select-like component built with React",
+  "main": "index.js",
+  "author": "Gabe Hargrave <gkhargrave@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "yarn clean:dist && yarn build:ts",
+    "build": "webpack --config config/webpack.prod.js",
+    "build:ts": "tsc --project ./tsconfig.declarations.json",
+    "clean:dist": "yarn rimraf dist"
+  },
+  "peerDependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@babel/runtime": "^7.5.5",
+    "babel-jest": "^24.8.0",
+    "babel-loader": "^8.0.6",
+    "prettier": "^1.18.2",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6"
+  }
+}
