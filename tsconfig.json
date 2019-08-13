@@ -24,6 +24,7 @@
     "config",
     "dist",
     "node_modules",
+    "src/**/index.ts",
     "src/**/*.spec.*",
     "src/**/*.stories.tsx"
   ],

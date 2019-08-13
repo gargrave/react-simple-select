@@ -9,7 +9,7 @@ export enum SelectSize {
   large = 'large',
 }
 
-export type Props = {
+export type SelectProps = {
   /** An optional message to display */
   message?: string
   /**
@@ -19,7 +19,7 @@ export type Props = {
   size?: SelectSize
 }
 
-export const Select: React.FC<Props> = memo(({ message, size }) => {
+export const Select: React.FC<SelectProps> = memo(({ message, size }) => {
   return (
     <>
       <div>Hello, Select!</div>

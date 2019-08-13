@@ -1,9 +1,9 @@
 import * as React from 'react'
 
-import { addDecorator, addParameters, storiesOf } from '@storybook/react'
+import { storiesOf } from '@storybook/react'
 import { withInfo } from '@storybook/addon-info'
 
-import Select, {SelectSize} from './Select'
+import Select, { SelectSize } from './Select'
 
 storiesOf('Select', module)
   .addDecorator(withInfo)
@@ -12,7 +12,7 @@ storiesOf('Select', module)
       inline: true,
     },
   })
-  .add('Basic Example', () => <Select  />)
+  .add('Basic Example', () => <Select />)
   .add('With Message', () => (
     <Select message="This is a message!" size={SelectSize.large} />
   ))
