@@ -1,6 +1,5 @@
-const baseConfig = require('../config/webpack.config')
+const baseConfig = require('../config/webpack.dev')
 
 module.exports = {
   ...baseConfig,
-  mode: 'development',
 }

@@ -1,5 +1,7 @@
 const path = require('path')
 
+const { getLocalIdent } = require('./css/getLocalIdent')
+
 const APP_ROOT = '../'
 
 module.exports = {
@@ -25,6 +27,21 @@ module.exports = {
           loader: 'babel-loader',
           options: {},
         },
+      },
+      {
+        test: /\.module\.scss$/,
+        use: [
+          require.resolve('style-loader'),
+          {
+            loader: require.resolve('css-loader'),
+            options: {
+              getLocalIdent,
+              importLoaders: 2,
+              modules: true,
+            },
+          },
+          'sass-loader',
+        ],
       },
     ],
   },
