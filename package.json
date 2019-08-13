@@ -9,7 +9,9 @@
     "prebuild": "yarn clean:dist && yarn build:ts",
     "build": "webpack --config config/webpack.prod.js",
     "build:ts": "tsc --project ./tsconfig.declarations.json",
-    "clean:dist": "yarn rimraf dist"
+    "clean:dist": "yarn rimraf dist",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "react": "^16.9.0",
@@ -23,6 +25,12 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/runtime": "^7.5.5",
+    "@storybook/addon-actions": "^5.1.10",
+    "@storybook/addon-links": "^5.1.10",
+    "@storybook/addons": "^5.1.10",
+    "@storybook/react": "^5.1.10",
+    "@types/node": "^12.7.1",
+    "@types/storybook__react": "^4.0.2",
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.6",
     "prettier": "^1.18.2",
