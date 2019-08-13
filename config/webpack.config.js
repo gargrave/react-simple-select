@@ -12,14 +12,15 @@ module.exports = {
   },
   //
   resolve: {
-    extensions: ['.js', '.ts'],
+    extensions: ['.js', '.ts', '.tsx'],
   },
   //
   module: {
     rules: [
       {
-        test: /\.tsx?/,
-        include: /src/,
+        test: /\.(js|ts|tsx)$/,
+        exclude: /node_modules/,
+        include: path.resolve(__dirname, APP_ROOT, 'src'),
         use: {
           loader: 'babel-loader',
           options: {},

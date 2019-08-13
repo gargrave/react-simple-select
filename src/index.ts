@@ -1,3 +1,5 @@
+export * from './Select'
+
 const hello = () => {
   console.log(`hello, react-simple-select`)
 }

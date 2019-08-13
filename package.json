@@ -11,7 +11,7 @@
     "build:ts": "tsc --project ./tsconfig.declarations.json",
     "clean:dist": "yarn rimraf dist"
   },
-  "peerDependencies": {
+  "dependencies": {
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },
@@ -20,6 +20,7 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@babel/runtime": "^7.5.5",
     "babel-jest": "^24.8.0",
