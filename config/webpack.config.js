@@ -33,9 +33,10 @@ module.exports = {
           {
             loader: require.resolve('css-loader'),
             options: {
-              getLocalIdent,
               importLoaders: 2,
-              modules: true,
+              modules: {
+                getLocalIdent,
+              },
             },
           },
           'sass-loader',

@@ -12,7 +12,8 @@
     "clean:dist": "yarn rimraf dist",
     "lint": "eslint --ext .ts,.tsx ./src",
     "test": "jest --watch",
-    "styleguide": "styleguidist server"
+    "styleguide": "styleguidist server",
+    "styleguide:build": "styleguidist build"
   },
   "dependencies": {
     "react": "^16.9.0",
@@ -37,6 +38,7 @@
     "babel-eslint": "^10.0.2",
     "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-config-react-app": "^5.0.0",
