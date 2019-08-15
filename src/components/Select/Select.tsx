@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 import { memo } from 'react'
-import classNames from 'classnames'
+
+import { classNames } from '../../utils'
 
 import { useOutsideClick } from '../../hooks'
 import {
