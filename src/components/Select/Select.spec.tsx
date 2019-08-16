@@ -52,6 +52,27 @@ describe('Select', () => {
     })
   })
 
+  describe('Disabled state', () => {
+    it('has no "disabled" state by default', () => {
+      const { container } = render(<Select {...defaultProps} />)
+      expect(container.querySelectorAll('.disabled')).toHaveLength(0)
+      expect(container.querySelectorAll('input[disabled]')).toHaveLength(0)
+    })
+
+    it('sets "disabled" state when the prop is true', () => {
+      const { container } = render(<Select {...defaultProps} disabled={true} />)
+      // applies "disabled" styling and attrs
+      expect(container.querySelectorAll('.disabled').length).toBeGreaterThan(0)
+      expect(container.querySelectorAll('input[disabled]')).toHaveLength(1)
+
+      // does not open the menu when clicked
+      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(0)
+      fireEvent.mouseDown(container.querySelector('.select') as HTMLElement)
+      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(0)
+      expect(container.querySelectorAll('.option')).toHaveLength(0)
+    })
+  })
+
   describe('"No Options" messaging', () => {
     it('displays a default "no options" message when options list is empty', () => {
       const { container, getByText, queryByText } = render(

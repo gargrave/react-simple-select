@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import Select from './Select'
+import Select, { SelectProps } from './Select'
 
 const options = [
   { firstName: 'Larry', id: 1, lastName: 'McDonald' },
@@ -13,7 +13,13 @@ const options = [
 const getOptionKey = option => `${option.id}`
 const getOptionLabel = option => `${option.firstName} ${option.lastName}`
 
-export const BasicExample = () => {
+type Props = {
+  title?: string
+} & Partial<SelectProps>
+
+const Component: React.FC<Props> = props => {
+  const { title } = props
+
   const [value, setValue] = React.useState(options[0])
 
   const handleChange = option => {
@@ -22,14 +28,28 @@ export const BasicExample = () => {
 
   return (
     <>
-      <p>A basic select component:</p>
+      {title && <p>{title}:</p>}
       <Select
         getOptionKey={getOptionKey}
         getOptionLabel={getOptionLabel}
         onChange={handleChange}
         options={options}
         value={value}
+        {...props}
       />
+    </>
+  )
+}
+
+const Basic = () => <Component title="A basic select" />
+
+const Disabled = () => <Component disabled={true} title="Disabled" />
+
+export const Examples = () => {
+  return (
+    <>
+      <Basic />
+      <Disabled />
     </>
   )
 }

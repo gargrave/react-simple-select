@@ -1,6 +1,4 @@
 ```jsx
-import { BasicExample } from './Select.examples'
-;<>
-  <BasicExample />
-</>
+import { Examples } from './Select.examples'
+;<Examples />
 ```

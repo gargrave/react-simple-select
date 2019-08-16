@@ -1,5 +1,13 @@
 $zIndex__base: 0;
 
+$bg__default: white;
+$bg__disabled: #f7f7f7;
+
+$bg__optionSelected: #ddd;
+$bg__optionHover: #eee;
+
+$textColor__default: #333;
+$textColor__disabled: #717171;
 $textColor__faded: #999;
 
 .hidden {
@@ -7,7 +15,14 @@ $textColor__faded: #999;
 }
 
 .select {
+  background: $bg__default;
+  color: $textColor__default;
   position: relative;
+
+  &.disabled {
+    background: $bg__disabled;
+    color: $textColor__disabled;
+  }
 }
 
 .currentValue {
@@ -48,14 +63,16 @@ $textColor__faded: #999;
   }
 }
 
-.selectInput {
-  &:read-only {
-    background: white !important; // TODO: remove this
+input.selectInput {
+  background: $bg__default;
+
+  &:disabled {
+    background: $bg__disabled;
   }
 }
 
 .optionsWrapper {
-  background: white;
+  background: $bg__default;
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 1px, rgba(0, 0, 0, 0.1) 0 4px 11px;
   display: flex;
@@ -73,11 +90,11 @@ $textColor__faded: #999;
   user-select: none;
 
   &:hover:not(.noOptionsMessage) {
-    background: #eee;
+    background: $bg__optionHover;
   }
 
   &.selected {
-    background: #ddd;
+    background: $bg__optionSelected;
   }
 
   &.noOptionsMessage {

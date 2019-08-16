@@ -16,6 +16,7 @@ import { initialSelectState, reducer, SelectActionType } from './Select.reducer'
 import styles from './Select.module.scss'
 
 export type SelectProps = {
+  disabled?: boolean
   getOptionKey?: (option: any) => string
   getOptionLabel?: (option: any) => string
   getOptionValue?: (option: any) => any
@@ -29,6 +30,7 @@ export type SelectProps = {
 
 export const Select: React.FC<SelectProps> = memo(props => {
   const {
+    disabled = false,
     getOptionKey,
     getOptionLabel = DEFAULT_GET_OPTION_LABEL,
     getOptionValue = DEFAULT_GET_OPTION_VALUE,
@@ -57,6 +59,8 @@ export const Select: React.FC<SelectProps> = memo(props => {
   }
 
   const handleInsideClick = (event: Event) => {
+    if (disabled) return
+
     if (menuIsOpen) {
       // we don't want to close the menu if an option was clicked,
       // as that will prevent on the "onChange()" callback from triggering
@@ -82,6 +86,8 @@ export const Select: React.FC<SelectProps> = memo(props => {
   }
 
   const handleInputFocus = () => {
+    if (disabled) return
+
     dispatch({ props, type: SelectActionType.focus })
   }
 
@@ -132,9 +138,15 @@ export const Select: React.FC<SelectProps> = memo(props => {
   })
 
   return (
-    <div className={classNames(styles.select)} ref={containerRef}>
+    <div
+      className={classNames(styles.select, { [styles.disabled]: disabled })}
+      ref={containerRef}
+    >
       <div
-        className={classNames(styles.inputWrapper, { [styles.active]: active })}
+        className={classNames(styles.inputWrapper, {
+          [styles.disabled]: disabled,
+          [styles.active]: active,
+        })}
       >
         <div
           className={classNames(styles.currentValue, {
@@ -146,7 +158,10 @@ export const Select: React.FC<SelectProps> = memo(props => {
         </div>
 
         <input
-          className={classNames(styles.selectInput)}
+          className={classNames(styles.selectInput, {
+            [styles.disabled]: disabled,
+          })}
+          disabled={disabled}
           onBlur={handleInputBlur}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
@@ -198,6 +213,10 @@ export const Select: React.FC<SelectProps> = memo(props => {
     </div>
   )
 })
+
+Select.defaultProps = {
+  disabled: false,
+}
 
 /**
  * This is a Select component!
