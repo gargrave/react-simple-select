@@ -18,7 +18,7 @@ type Props = {
 } & Partial<SelectProps>
 
 const Component: React.FC<Props> = props => {
-  const { title } = props
+  const { label, title } = props
 
   const [value, setValue] = React.useState(options[0])
 
@@ -32,6 +32,7 @@ const Component: React.FC<Props> = props => {
       <Select
         getOptionKey={getOptionKey}
         getOptionLabel={getOptionLabel}
+        label={label}
         onChange={handleChange}
         options={options}
         value={value}
@@ -42,14 +43,17 @@ const Component: React.FC<Props> = props => {
 }
 
 const Basic = () => <Component title="A basic select" />
-
 const Disabled = () => <Component disabled={true} title="Disabled" />
+const WithLabel = () => (
+  <Component label="This one has a label" title='With "label" props' />
+)
 
 export const Examples = () => {
   return (
     <>
       <Basic />
       <Disabled />
+      <WithLabel />
     </>
   )
 }

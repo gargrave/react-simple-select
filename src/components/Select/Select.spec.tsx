@@ -28,6 +28,7 @@ describe('Select', () => {
       getOptionKey: jest.fn(userIdString),
       getOptionLabel: jest.fn(userFullName),
       getOptionValue: jest.fn(userIdString),
+      label: undefined,
       onChange: jest.fn(),
       options,
       placeholder: DEFAULT_PLACEHOLDER,
@@ -196,6 +197,30 @@ describe('Select', () => {
       expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(0)
       expect(onChange).toHaveBeenCalledTimes(1)
       expect(onChange).toHaveBeenCalledWith(options[1])
+    })
+  })
+
+  describe('Label', () => {
+    it('renders a label with the specified text', () => {
+      const labelTxt = 'This is the label'
+      const { container, getByText } = render(
+        <Select {...defaultProps} label={labelTxt} />,
+      )
+      expect(container.querySelectorAll('.labelWrapper')).toHaveLength(1)
+      expect(container.querySelectorAll('label.label')).toHaveLength(1)
+      expect(getByText(labelTxt)).toBeInTheDocument()
+      expect(container.querySelector('.select')).toHaveAttribute(
+        'aria-labelledby',
+      )
+    })
+
+    it('does not render a label if no prop is provided', () => {
+      const { container } = render(<Select {...defaultProps} />)
+      expect(container.querySelectorAll('.labelWrapper')).toHaveLength(0)
+      expect(container.querySelectorAll('label')).toHaveLength(0)
+      expect(container.querySelector('.select')).not.toHaveAttribute(
+        'aria-labelledby',
+      )
     })
   })
 })
