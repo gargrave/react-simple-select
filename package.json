@@ -1,5 +1,5 @@
 {
-  "name": "react-simple-select",
+  "name": "@gargrave/react-simple-select",
   "version": "0.1.0",
   "description": "A simple select-like component built with React",
   "main": "index.js",
@@ -9,6 +9,7 @@
     "prebuild": "yarn clean:dist && yarn build:ts",
     "build": "webpack --config config/webpack.prod.js",
     "build:ts": "tsc --project ./tsconfig.declarations.json",
+    "release": "jest && yarn build && np --yolo",
     "clean:dist": "yarn rimraf dist",
     "lint": "eslint --ext .ts,.tsx ./src",
     "test": "jest --watch",
