@@ -2,8 +2,10 @@
   "name": "@gargrave/react-simple-select",
   "version": "0.1.0",
   "description": "A simple select-like component built with React",
-  "main": "index.js",
+  "main": "dist/react-simple-select.min.js",
+  "types": "dist/react-simple-select.d.ts",
   "author": "Gabe Hargrave <gkhargrave@gmail.com>",
+  "repository": "https://github.com/gargrave/react-simple-select",
   "license": "MIT",
   "scripts": {
     "prebuild": "yarn clean:dist && yarn build:ts",
