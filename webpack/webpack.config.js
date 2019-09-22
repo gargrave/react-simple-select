@@ -1,42 +1,30 @@
 const path = require('path')
 
-const { getLocalIdent } = require('./css/getLocalIdent')
-
-const APP_ROOT = '../'
-
 module.exports = {
   entry: './src/index.ts',
-  output: {
-    filename: 'react-simple-select.min.js',
-    library: 'react-simple-select',
-    libraryTarget: 'umd',
-    path: path.resolve(__dirname, APP_ROOT, 'dist'),
-  },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
   },
+  mode: 'development',
   module: {
     rules: [
       {
         test: /\.(js|ts|tsx)$/,
         exclude: /node_modules/,
-        include: path.resolve(__dirname, APP_ROOT, 'src'),
+        include: path.resolve(__dirname, '../', 'src'),
         use: {
           loader: 'babel-loader',
           options: {},
         },
       },
       {
-        test: /\.module\.scss$/,
+        test: /\.scss$/,
         use: [
           require.resolve('style-loader'),
           {
             loader: require.resolve('css-loader'),
             options: {
               importLoaders: 2,
-              modules: {
-                getLocalIdent,
-              },
             },
           },
           'sass-loader',
