@@ -5,6 +5,7 @@ config
 node_modules
 src
 
+*.tgz
 .babelrc
 .editorconfig
 .eslintignore
