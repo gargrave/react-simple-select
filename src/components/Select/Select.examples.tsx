@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import Select, { SelectProps } from './Select'
+import { Select, SelectProps } from './Select'
 
 const options = [
   { firstName: 'Larry', id: 1, lastName: 'McDonald' },

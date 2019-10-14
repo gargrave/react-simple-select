@@ -238,8 +238,3 @@ Select.defaultProps = {
   disabled: false,
   label: undefined,
 }
-
-/**
- * This is a Select component!
- */
-export default memo(Select)
