@@ -94,6 +94,7 @@
     {
       "files": ["*.spec.tsx", "*.spec.ts"],
       "rules": {
+        "padding-line-between-statements": "off",
         "sort-keys": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
