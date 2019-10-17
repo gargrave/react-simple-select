@@ -43,16 +43,20 @@ const Component: React.FC<Props> = props => {
 }
 
 const Basic = () => <Component title="A basic select" />
+
 const Disabled = () => <Component disabled={true} title="Disabled" />
+
 const WithLabel = () => (
-  <Component label="This one has a label" title='With "label" props' />
+  <Component label="Favorite Person" title='With "label" prop' />
 )
 
 export const Examples = () => {
   return (
     <>
       <Basic />
+      <hr />
       <Disabled />
+      <hr />
       <WithLabel />
     </>
   )

@@ -6,7 +6,10 @@ module.exports = {
     './tsconfig.json',
     [{}],
   ).parse,
-  require: [path.join(__dirname, 'src/components/Select/Select.scss')],
+  require: [
+    path.join(__dirname, 'src/components/Select/Select.scss'),
+    path.join(__dirname, 'src/styleguide.scss'),
+  ],
   title: 'React Simple Select',
   webpackConfig: require('./webpack/webpack.config.js'),
 }
