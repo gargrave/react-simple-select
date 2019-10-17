@@ -7,7 +7,7 @@ module.exports = {
     [{}],
   ).parse,
   require: [
-    path.join(__dirname, 'src/components/Select/Select.scss'),
+    path.join(__dirname, 'src/components/Select/styles/Select.scss'),
     path.join(__dirname, 'src/styleguide.scss'),
   ],
   title: 'React Simple Select',

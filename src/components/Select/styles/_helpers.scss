@@ -1,0 +1,35 @@
+$baseName: 'reactSimpleSelect';
+
+@function makeClassName($name) {
+  @return '.#{$baseName}#{$name}';
+}
+
+@mixin style($name) {
+  #{makeClassName($name)} {
+    @content;
+  }
+}
+
+@mixin active {
+  &#{makeClassName('__active')} {
+    @content;
+  }
+}
+
+@mixin not__active {
+  &:not(#{makeClassName('__active')}) {
+    @content;
+  }
+}
+
+@mixin disabled {
+  &#{makeClassName('__disabled')} {
+    @content;
+  }
+}
+
+@mixin selected {
+  &#{makeClassName('__selected')} {
+    @content;
+  }
+}

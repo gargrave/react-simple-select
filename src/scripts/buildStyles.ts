@@ -5,7 +5,7 @@ const outFile = './dist/react-simple-select.css'
 
 nodeSass.render(
   {
-    file: './src/components/Select/Select.scss',
+    file: './src/components/Select/styles/Select.scss',
   },
   (error, result) => {
     if (!error) {

@@ -1,50 +1,5 @@
-$baseName: 'reactSimpleSelect';
-
-$zIndex__base: 0;
-
-$bg__default: white;
-$bg__disabled: #f7f7f7;
-
-$bg__optionSelected: #ddd;
-$bg__optionHover: #eee;
-
-$textColor__default: #333;
-$textColor__disabled: #717171;
-$textColor__faded: #999;
-
-@function makeClassName($name) {
-  @return '.#{$baseName}#{$name}';
-}
-
-@mixin style($name) {
-  #{makeClassName($name)} {
-    @content;
-  }
-}
-
-@mixin active {
-  &#{makeClassName('__active')} {
-    @content;
-  }
-}
-
-@mixin not__active {
-  &:not(#{makeClassName('__active')}) {
-    @content;
-  }
-}
-
-@mixin disabled {
-  &#{makeClassName('__disabled')} {
-    @content;
-  }
-}
-
-@mixin selected {
-  &#{makeClassName('__selected')} {
-    @content;
-  }
-}
+@import './_helpers';
+@import './_variables';
 
 @include style('__container') {
   background: $bg__default;
@@ -134,7 +89,7 @@ input#{makeClassName('__selectInput')} {
     background: $bg__optionHover;
   }
 
-  &.selected {
+  @include selected {
     background: $bg__optionSelected;
   }
 
