@@ -3,10 +3,18 @@ import '@testing-library/jest-dom/extend-expect'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 
 import {
+  css as cssHelper,
   DEFAULT_NO_OPTIONS_MESSAGE,
   DEFAULT_PLACEHOLDER,
 } from './Select.helpers'
 import { Select, SelectProps } from './Select'
+
+const cssMap = (className: string): string => `.${cssHelper(className)}`
+const css = (classNames: string | string[]): string =>
+  (Array.isArray(classNames)
+    ? classNames.map(cssMap)
+    : [classNames].map(cssMap)
+  ).join('')
 
 const options = [
   { id: 1, firstName: 'Larry', lastName: 'McDonald' },
@@ -39,16 +47,20 @@ describe('Select', () => {
   afterEach(cleanup)
 
   describe('Conditional styling', () => {
-    describe('.placeholder', () => {
+    describe('Placeholder', () => {
       it('applies a "placeholder" class when there is no value', () => {
         const { container } = render(<Select {...defaultProps} value={null} />)
-        const len = container.querySelectorAll('.placeholder').length
+
+        const q = query => container.querySelectorAll(query)
+        const len = q(css('__placeholder')).length
         expect(len).toBeGreaterThan(0)
       })
 
       it('does not apply a "placeholder" class when there is a value', () => {
         const { container } = render(<Select {...defaultProps} />)
-        expect(container.querySelectorAll('.placeholder')).toHaveLength(0)
+
+        const q = query => container.querySelectorAll(query)
+        expect(q(css('__placeholder'))).toHaveLength(0)
       })
     })
   })
@@ -56,21 +68,27 @@ describe('Select', () => {
   describe('Disabled state', () => {
     it('has no "disabled" state by default', () => {
       const { container } = render(<Select {...defaultProps} />)
-      expect(container.querySelectorAll('.disabled')).toHaveLength(0)
-      expect(container.querySelectorAll('input[disabled]')).toHaveLength(0)
+
+      const q = query => container.querySelectorAll(query)
+      expect(q(css('__disabled'))).toHaveLength(0)
+      expect(q('input[disabled]')).toHaveLength(0)
     })
 
     it('sets "disabled" state when the prop is true', () => {
       const { container } = render(<Select {...defaultProps} disabled={true} />)
+
+      const q = query => container.querySelectorAll(query)
       // applies "disabled" styling and attrs
-      expect(container.querySelectorAll('.disabled').length).toBeGreaterThan(0)
-      expect(container.querySelectorAll('input[disabled]')).toHaveLength(1)
+      expect(q(css('__disabled')).length).toBeGreaterThan(0)
+      expect(q('input[disabled]')).toHaveLength(1)
 
       // does not open the menu when clicked
-      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(0)
-      fireEvent.mouseDown(container.querySelector('.select') as HTMLElement)
-      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(0)
-      expect(container.querySelectorAll('.option')).toHaveLength(0)
+      expect(q('.optionsWrapper')).toHaveLength(0)
+      fireEvent.mouseDown(container.querySelector(
+        css('__container'),
+      ) as HTMLElement)
+      expect(q('.optionsWrapper')).toHaveLength(0)
+      expect(q('.option')).toHaveLength(0)
     })
   })
 
@@ -80,15 +98,18 @@ describe('Select', () => {
         <Select {...defaultProps} options={[]} />,
       )
 
+      const q = query => container.querySelectorAll(query)
       expect(queryByText(DEFAULT_NO_OPTIONS_MESSAGE)).not.toBeInTheDocument()
-      expect(container.querySelectorAll('.noOptionsMessage')).toHaveLength(0)
-      fireEvent.mouseDown(container.querySelector('.select') as HTMLElement)
+      expect(q(css('__noOptionsMessage'))).toHaveLength(0)
+      fireEvent.mouseDown(container.querySelector(
+        css('__container'),
+      ) as HTMLElement)
       expect(getByText(DEFAULT_NO_OPTIONS_MESSAGE)).toBeInTheDocument()
-      expect(container.querySelectorAll('.noOptionsMessage')).toHaveLength(1)
+      expect(q(css('__noOptionsMessage'))).toHaveLength(1)
     })
 
     it('displays a custom "no options" message when provided', () => {
-      const noOptionsMsg = 'You aint go no options, fool'
+      const noOptionsMsg = "You ain't go no options, fool"
       const { container, getByText, queryByText } = render(
         <Select
           {...defaultProps}
@@ -97,11 +118,14 @@ describe('Select', () => {
         />,
       )
 
+      const q = query => container.querySelectorAll(query)
       expect(queryByText(noOptionsMsg)).not.toBeInTheDocument()
-      expect(container.querySelectorAll('.noOptionsMessage')).toHaveLength(0)
-      fireEvent.mouseDown(container.querySelector('.select') as HTMLElement)
+      expect(q(css('__noOptionsMessage'))).toHaveLength(0)
+      fireEvent.mouseDown(container.querySelector(
+        css('__container'),
+      ) as HTMLElement)
       expect(getByText(noOptionsMsg)).toBeInTheDocument()
-      expect(container.querySelectorAll('.noOptionsMessage')).toHaveLength(1)
+      expect(q(css('__noOptionsMessage'))).toHaveLength(1)
     })
   })
 
@@ -138,28 +162,34 @@ describe('Select', () => {
   describe('Text Input', () => {
     it('shows the "current value" container when there is no search text', () => {
       const { container } = render(<Select {...defaultProps} />)
-      expect(container.querySelectorAll('.currentValue.hidden')).toHaveLength(0)
+
+      const classString = css(['__currentValue', '__hidden'])
+      expect(container.querySelectorAll(classString)).toHaveLength(0)
     })
 
     it('hides the "current value" container when there is search text', () => {
       const { container } = render(<Select {...defaultProps} />)
       const inputEl = container.querySelector('input') as HTMLElement
 
-      expect(container.querySelectorAll('.currentValue.hidden')).toHaveLength(0)
+      const classString = css(['__currentValue', '__hidden'])
+      const q = query => container.querySelectorAll(query)
+      expect(q(classString)).toHaveLength(0)
       fireEvent.change(inputEl, { target: { value: 'show me the thing' } })
-      expect(container.querySelectorAll('.currentValue.hidden')).toHaveLength(1)
+      expect(q(classString)).toHaveLength(1)
     })
 
     it('clears any existing search text on outside click', () => {
       const { container } = render(<Select {...defaultProps} />)
       const inputEl = container.querySelector('input') as HTMLElement
 
-      expect(container.querySelectorAll('.currentValue.hidden')).toHaveLength(0)
+      const classString = css(['__currentValue', '__hidden'])
+      const q = query => container.querySelectorAll(query)
+      expect(q(classString)).toHaveLength(0)
       fireEvent.change(inputEl, { target: { value: 'show me the thing' } })
-      expect(container.querySelectorAll('.currentValue.hidden')).toHaveLength(1)
+      expect(q(classString)).toHaveLength(1)
 
       fireEvent.mouseDown(container)
-      expect(container.querySelectorAll('.currentValue.hidden')).toHaveLength(0)
+      expect(q(classString)).toHaveLength(0)
     })
   })
 
@@ -167,11 +197,14 @@ describe('Select', () => {
     it('shows the options list when clicked', () => {
       const { container } = render(<Select {...defaultProps} />)
 
-      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(0)
+      const q = query => container.querySelectorAll(query)
+      expect(q(css('__optionsWrapper'))).toHaveLength(0)
       // does not render the options wrapper until it is focused
-      fireEvent.mouseDown(container.querySelector('.select') as HTMLElement)
-      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(1)
-      expect(container.querySelectorAll('.option')).toHaveLength(options.length)
+      fireEvent.mouseDown(container.querySelector(
+        css('__container'),
+      ) as HTMLElement)
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
+      expect(q(css('__option'))).toHaveLength(options.length)
     })
 
     it('closes the options list when the wrapper is clicked', () => {
@@ -179,10 +212,11 @@ describe('Select', () => {
       const { container } = render(<Select {...defaultProps} />)
       const wrapper = container.firstChild as HTMLElement
 
+      const q = query => container.querySelectorAll(query)
       fireEvent.mouseDown(wrapper)
-      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(1)
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
       fireEvent.mouseDown(wrapper)
-      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(0)
+      expect(q(css('__optionsWrapper'))).toHaveLength(0)
       expect(onChange).not.toHaveBeenCalled()
     })
 
@@ -191,10 +225,11 @@ describe('Select', () => {
       const { container } = render(<Select {...defaultProps} />)
       const wrapper = container.firstChild as HTMLElement
 
+      const q = query => container.querySelectorAll(query)
       fireEvent.mouseDown(wrapper)
-      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(1)
-      fireEvent.click(container.querySelectorAll('.option')[1])
-      expect(container.querySelectorAll('.optionsWrapper')).toHaveLength(0)
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
+      fireEvent.click(q(css('__option'))[1])
+      expect(q(css('__optionsWrapper'))).toHaveLength(0)
       expect(onChange).toHaveBeenCalledTimes(1)
       expect(onChange).toHaveBeenCalledWith(options[1])
     })
@@ -206,19 +241,23 @@ describe('Select', () => {
       const { container, getByText } = render(
         <Select {...defaultProps} label={labelTxt} />,
       )
-      expect(container.querySelectorAll('.labelWrapper')).toHaveLength(1)
-      expect(container.querySelectorAll('label.label')).toHaveLength(1)
+
+      const q = query => container.querySelectorAll(query)
+      expect(q(css(`__labelWrapper`))).toHaveLength(1)
+      expect(q(`label${css('__label')}`)).toHaveLength(1)
       expect(getByText(labelTxt)).toBeInTheDocument()
-      expect(container.querySelector('.select')).toHaveAttribute(
+      expect(container.querySelector(css('__container'))).toHaveAttribute(
         'aria-labelledby',
       )
     })
 
     it('does not render a label if no prop is provided', () => {
       const { container } = render(<Select {...defaultProps} />)
-      expect(container.querySelectorAll('.labelWrapper')).toHaveLength(0)
-      expect(container.querySelectorAll('label')).toHaveLength(0)
-      expect(container.querySelector('.select')).not.toHaveAttribute(
+
+      const q = query => container.querySelectorAll(query)
+      expect(q(css(`__labelWrapper`))).toHaveLength(0)
+      expect(q('label')).toHaveLength(0)
+      expect(container.querySelector(css('__container'))).not.toHaveAttribute(
         'aria-labelledby',
       )
     })

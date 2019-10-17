@@ -50,6 +50,13 @@ const WithLabel = () => (
   <Component label="Favorite Person" title='With "label" prop' />
 )
 
+const Placeholder = () => (
+  <Component
+    title="With placeholder text (no selected value)"
+    value={undefined}
+  />
+)
+
 export const Examples = () => {
   return (
     <>
@@ -58,6 +65,8 @@ export const Examples = () => {
       <Disabled />
       <hr />
       <WithLabel />
+      <hr />
+      <Placeholder />
     </>
   )
 }

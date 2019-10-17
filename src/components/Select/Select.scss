@@ -1,3 +1,5 @@
+$baseName: 'reactSimpleSelect';
+
 $zIndex__base: 0;
 
 $bg__default: white;
@@ -10,53 +12,83 @@ $textColor__default: #333;
 $textColor__disabled: #717171;
 $textColor__faded: #999;
 
-.hidden {
-  visibility: hidden;
+@function makeClassName($name) {
+  @return '.#{$baseName}#{$name}';
 }
 
-.select {
+@mixin style($name) {
+  #{makeClassName($name)} {
+    @content;
+  }
+}
+
+@mixin active {
+  &#{makeClassName('__active')} {
+    @content;
+  }
+}
+
+@mixin not__active {
+  &:not(#{makeClassName('__active')}) {
+    @content;
+  }
+}
+
+@mixin disabled {
+  &#{makeClassName('__disabled')} {
+    @content;
+  }
+}
+
+@mixin selected {
+  &#{makeClassName('__selected')} {
+    @content;
+  }
+}
+
+@include style('__container') {
   background: $bg__default;
   color: $textColor__default;
   position: relative;
 
-  &.disabled {
+  @include disabled {
     background: $bg__disabled;
     color: $textColor__disabled;
   }
 }
 
-.currentValue {
+@include style('__currentValue') {
   left: 14px; // TODO: what is the logic behind this value?
   pointer-events: none;
   position: absolute;
 
-  &.placeholder {
+  &#{makeClassName('__placeholder')} {
     color: $textColor__faded;
   }
 }
 
-.labelWrapper {
-  margin-bottom: 4px;
-
-  .label {
-    font-weight: bold;
-  }
+@include style('__hidden') {
+  visibility: hidden;
 }
 
-.inputWrapper {
+@include style('__labelWrapper') {
+  margin-bottom: 4px;
+}
+
+@include style('__label') {
+}
+
+@include style('__inputWrapper') {
   align-items: center;
+  border: 1px solid #ccc;
   border-radius: 4px;
   cursor: default;
   display: flex;
   padding: 8px 12px;
   z-index: $zIndex__base;
 
-  &.active {
+  @include active {
     border: 1px solid #999;
-  }
-
-  &:not(.active) {
-    border: 1px solid #ccc;
   }
 
   input {
@@ -71,15 +103,15 @@ $textColor__faded: #999;
   }
 }
 
-input.selectInput {
+input#{makeClassName('__selectInput')} {
   background: $bg__default;
 
-  &:disabled {
+  @include disabled {
     background: $bg__disabled;
   }
 }
 
-.optionsWrapper {
+@include style('__optionsWrapper') {
   background: $bg__default;
   border-radius: 4px;
   box-shadow: rgba(0, 0, 0, 0.1) 0 0 0 1px, rgba(0, 0, 0, 0.1) 0 4px 11px;
@@ -92,13 +124,13 @@ input.selectInput {
   z-index: $zIndex__base + 1;
 }
 
-.option {
+@include style('__option') {
   cursor: pointer;
   display: flex;
   padding: 8px 12px;
   user-select: none;
 
-  &:hover:not(.noOptionsMessage) {
+  &:hover:not(#{makeClassName('__noOptionsMessage')}) {
     background: $bg__optionHover;
   }
 
@@ -106,7 +138,7 @@ input.selectInput {
     background: $bg__optionSelected;
   }
 
-  &.noOptionsMessage {
+  &#{makeClassName('__noOptionsMessage')} {
     align-self: center;
     color: $textColor__faded;
     cursor: default;
