@@ -52,7 +52,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   // eslint-disable-next-line no-plusplus
   const id = React.useRef(++nextId) // unique ID for each instance
   const labelId = React.useMemo(
-    () => `react-simple-select-label_${id.current}`,
+    () => `reactSimpleSelect__label--${id.current}`,
     [id],
   )
 
