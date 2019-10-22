@@ -9,18 +9,21 @@ const options = [
   { firstName: 'Billy', id: 4, lastName: 'Pickles' },
   { firstName: 'Davie', id: 5, lastName: 'McBavie' },
 ]
+const randomOption = () => options[Math.floor(Math.random() * options.length)]
 
 const getOptionKey = option => `${option.id}`
 const getOptionLabel = option => `${option.firstName} ${option.lastName}`
 
 type Props = {
+  hasInitialValue?: boolean
   title?: string
 } & Partial<SelectProps>
 
 const Component: React.FC<Props> = props => {
-  const { label, title } = props
+  const { hasInitialValue = true, label, title } = props
 
-  const [value, setValue] = React.useState(options[0])
+  const initial = hasInitialValue && randomOption()
+  const [value, setValue] = React.useState(initial)
 
   const handleChange = option => {
     setValue(option)
@@ -52,8 +55,9 @@ const WithLabel = () => (
 
 const Placeholder = () => (
   <Component
+    hasInitialValue={false}
+    placeholder="Choose your bestest buddy"
     title="With placeholder text (no selected value)"
-    value={undefined}
   />
 )
 

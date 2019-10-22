@@ -5,11 +5,11 @@ import { useOutsideClick } from '../../hooks'
 import { classNames } from '../../utils'
 
 import {
-  css,
   DEFAULT_GET_OPTION_LABEL,
   DEFAULT_GET_OPTION_VALUE,
   DEFAULT_NO_OPTIONS_MESSAGE,
   DEFAULT_PLACEHOLDER,
+  styles,
 } from './Select.helpers'
 import { initialSelectState, reducer, SelectActionType } from './Select.reducer'
 
@@ -150,8 +150,8 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   return (
     <>
       {label && (
-        <div className={classNames(css('__labelWrapper'))}>
-          <label className={classNames(css('__label'))} id={labelId}>
+        <div className={classNames(styles.labelWrapper)}>
+          <label className={classNames(styles.label)} id={labelId}>
             {label}
           </label>
         </div>
@@ -159,29 +159,29 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
 
       <div
         aria-labelledby={label ? labelId : undefined}
-        className={classNames(css('__container'), {
-          [css('__disabled')]: disabled,
+        className={classNames(styles.container, {
+          [styles.disabled]: disabled,
         })}
         ref={containerRef}
       >
         <div
-          className={classNames(css('__inputWrapper'), {
-            [css('__active')]: active,
-            [css('__disabled')]: disabled,
+          className={classNames(styles.inputWrapper, {
+            [styles.active]: active,
+            [styles.disabled]: disabled,
           })}
         >
           <div
-            className={classNames(css('__currentValue'), {
-              [css('__hidden')]: !!inputValue,
-              [css('__placeholder')]: !value,
+            className={classNames(styles.currentValue, {
+              [styles.hidden]: !!inputValue,
+              [styles.placeholder]: !value,
             })}
           >
             {displayValue}
           </div>
 
           <input
-            className={classNames(css('__selectInput'), {
-              [css('__disabled')]: disabled,
+            className={classNames(styles.selectInput, {
+              [styles.disabled]: disabled,
             })}
             disabled={disabled}
             onBlur={handleInputBlur}
@@ -204,7 +204,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
         </div>
 
         {menuIsOpen && (
-          <div className={classNames(css('__optionsWrapper'))} ref={menuRef}>
+          <div className={classNames(styles.optionsWrapper)} ref={menuRef}>
             {visibleOptions.length ? (
               visibleOptions.map((option, idx) => {
                 const key = getOptionKey ? getOptionKey(option) : idx
@@ -213,8 +213,8 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
 
                 return (
                   <div
-                    className={classNames(css('__option'), {
-                      [css('__selected')]: isSelectedOption,
+                    className={classNames(styles.option, {
+                      [styles.selected]: isSelectedOption,
                     })}
                     key={key}
                     onClick={() => handleOptionClick(option)}
@@ -226,10 +226,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
               })
             ) : (
               <div
-                className={classNames(
-                  css('__option'),
-                  css('__noOptionsMessage'),
-                )}
+                className={classNames(styles.option, styles.noOptionsMessage)}
               >
                 {noOptionsMessage}
               </div>
