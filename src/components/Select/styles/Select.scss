@@ -18,7 +18,7 @@
   position: absolute;
 
   &#{makeClassName('__placeholder')} {
-    color: $textColor__faded;
+    color: $textColor__disabled;
   }
 }
 
@@ -95,7 +95,20 @@ input#{makeClassName('__selectInput')} {
 
   &#{makeClassName('__noOptionsMessage')} {
     align-self: center;
-    color: $textColor__faded;
+    color: $textColor__disabled;
     cursor: default;
+  }
+}
+
+@include style('__svgWrapper') {
+  line-height: 0;
+
+  svg {
+    fill: $clickableIcon__idle;
+    transition: fill 0.15s ease;
+  }
+
+  &:hover svg {
+    fill: $clickableIcon__hover;
   }
 }

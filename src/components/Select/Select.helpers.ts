@@ -5,6 +5,8 @@ export const DEFAULT_PLACEHOLDER = 'Select...'
 export const DEFAULT_GET_OPTION_VALUE = option => option
 export const DEFAULT_GET_OPTION_LABEL = option => `${option}`
 
+export const TEST_ID_CLEAR_ICON = `${DEFAULT_CSS_CLASS_BASE}-icon-clear`
+
 export const css = (className: string): string =>
   `${DEFAULT_CSS_CLASS_BASE}${className}`
 
@@ -23,4 +25,5 @@ export const styles = {
   placeholder: css('__placeholder'),
   selectInput: css('__selectInput'),
   selected: css('__selected'),
+  svgWrapper: css('__svgWrapper'),
 }

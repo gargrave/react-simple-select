@@ -4,10 +4,10 @@ import { Select, SelectProps } from './Select'
 
 const options = [
   { firstName: 'Larry', id: 1, lastName: 'McDonald' },
-  { firstName: 'Lacey', id: 2, lastName: 'Struthers' },
+  { firstName: 'Lacey', id: 2, lastName: 'Johnson' },
   { firstName: 'Sandra', id: 3, lastName: 'Callahan' },
   { firstName: 'Billy', id: 4, lastName: 'Pickles' },
-  { firstName: 'Davie', id: 5, lastName: 'McBavie' },
+  { firstName: 'Davie', id: 5, lastName: 'Stanton' },
 ]
 const randomOption = () => options[Math.floor(Math.random() * options.length)]
 

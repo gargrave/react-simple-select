@@ -6,7 +6,11 @@ import {
   css as cssHelper,
   DEFAULT_NO_OPTIONS_MESSAGE,
   DEFAULT_PLACEHOLDER,
+  TEST_ID_CLEAR_ICON,
 } from './Select.helpers'
+import * as reducerImports from './Select.reducer'
+import { SelectActionType } from './Select.reducer'
+
 import { Select, SelectProps } from './Select'
 
 const cssMap = (className: string): string => `.${cssHelper(className)}`
@@ -31,12 +35,16 @@ describe('Select', () => {
   let defaultProps: SelectProps
 
   beforeEach(() => {
+    jest.restoreAllMocks()
     jest.resetAllMocks()
     defaultProps = {
+      clearable: true,
+      disabled: false,
       getOptionKey: jest.fn(userIdString),
       getOptionLabel: jest.fn(userFullName),
       getOptionValue: jest.fn(userIdString),
       label: undefined,
+      noOptionsMessage: undefined,
       onChange: jest.fn(),
       options,
       placeholder: DEFAULT_PLACEHOLDER,
@@ -75,7 +83,9 @@ describe('Select', () => {
     })
 
     it('sets "disabled" state when the prop is true', () => {
-      const { container } = render(<Select {...defaultProps} disabled={true} />)
+      const { container, queryByTestId } = render(
+        <Select {...defaultProps} disabled={true} />,
+      )
 
       const q = query => container.querySelectorAll(query)
       // applies "disabled" styling and attrs
@@ -89,6 +99,9 @@ describe('Select', () => {
       ) as HTMLElement)
       expect(q('.optionsWrapper')).toHaveLength(0)
       expect(q('.option')).toHaveLength(0)
+
+      // does not render the "clear" button
+      expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
     })
   })
 
@@ -194,7 +207,7 @@ describe('Select', () => {
   })
 
   describe('Interactivity', () => {
-    it('shows the options list when clicked', () => {
+    it('shows the options list on mouseDown', () => {
       const { container } = render(<Select {...defaultProps} />)
 
       const q = query => container.querySelectorAll(query)
@@ -207,7 +220,7 @@ describe('Select', () => {
       expect(q(css('__option'))).toHaveLength(options.length)
     })
 
-    it('closes the options list when the wrapper is clicked', () => {
+    it('closes the options list when the wrapper gets mouseDown', () => {
       const { onChange } = defaultProps
       const { container } = render(<Select {...defaultProps} />)
       const wrapper = container.firstChild as HTMLElement
@@ -221,17 +234,30 @@ describe('Select', () => {
     })
 
     it('closes the options list and calls the callback when an option is clicked', () => {
+      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
       const { onChange } = defaultProps
       const { container } = render(<Select {...defaultProps} />)
       const wrapper = container.firstChild as HTMLElement
 
       const q = query => container.querySelectorAll(query)
+      // fire one mouseDown event to open the menu
       fireEvent.mouseDown(wrapper)
       expect(q(css('__optionsWrapper'))).toHaveLength(1)
+      // fire mouseDown THEN click to simulate what actually happens in the real DOM
+      // this will trigger the "inside click" hook followed by the actual option selection
+      fireEvent.mouseDown(q(css('__option'))[1])
       fireEvent.click(q(css('__option'))[1])
       expect(q(css('__optionsWrapper'))).toHaveLength(0)
       expect(onChange).toHaveBeenCalledTimes(1)
       expect(onChange).toHaveBeenCalledWith(options[1])
+
+      // ensure that our "close menu" dispatch call is NOT called when clicking on the clear icon
+      const allActionTypes = reducerSpy.mock.calls.map(
+        ([_state, action]) => action.type,
+      )
+      const lastActionType = allActionTypes[allActionTypes.length - 1]
+      expect(allActionTypes.includes(SelectActionType.closeMenu)).toBe(false)
+      expect(lastActionType).toBe(SelectActionType.blur)
     })
   })
 
@@ -260,6 +286,44 @@ describe('Select', () => {
       expect(container.querySelector(css('__container'))).not.toHaveAttribute(
         'aria-labelledby',
       )
+    })
+  })
+
+  describe('Clearable', () => {
+    it('renders a clickable "clear" icon by default when a selected value is present', () => {
+      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
+      const { onChange } = defaultProps
+      const { getAllByTestId } = render(<Select {...defaultProps} />)
+      const clearIcon = getAllByTestId(TEST_ID_CLEAR_ICON)
+
+      expect(clearIcon).toHaveLength(1)
+      expect(onChange).toHaveBeenCalledTimes(0)
+      expect(reducerSpy).toHaveBeenCalledTimes(0)
+      fireEvent.mouseDown(clearIcon[0])
+      expect(onChange).toHaveBeenCalledTimes(1)
+      expect(onChange).toHaveBeenCalledWith(undefined)
+
+      // ensure that our "open menu" dispatch call is NOT called when clicking on the clear icon
+      const allActionTypes = reducerSpy.mock.calls.map(
+        ([_state, action]) => action.type,
+      )
+      const lastActionType = allActionTypes[allActionTypes.length - 1]
+      expect(allActionTypes.includes(SelectActionType.openMenu)).toBe(false)
+      expect(lastActionType).toBe(SelectActionType.blur)
+    })
+
+    it('does not render a "clear" icon when there is no selection', () => {
+      const { queryByTestId } = render(
+        <Select {...defaultProps} value={undefined} />,
+      )
+      expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
+    })
+
+    it('never renders a "clear" icon when prop is false', () => {
+      const { queryByTestId } = render(
+        <Select {...defaultProps} clearable={false} />,
+      )
+      expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
     })
   })
 })
