@@ -8,7 +8,7 @@ module.exports = {
   ).parse,
   require: [
     path.join(__dirname, 'src/components/Select/styles/Select.scss'),
-    path.join(__dirname, 'src/styleguide.scss'),
+    path.join(__dirname, 'src/components/Select/styleguide/Styleguide.scss'),
   ],
   title: 'React Simple Select',
   webpackConfig: require('./webpack/webpack.config.js'),

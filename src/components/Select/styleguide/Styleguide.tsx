@@ -1,6 +1,7 @@
 import * as React from 'react'
 
-import { Select, SelectProps } from './Select'
+import { MultiProps } from './MultiProps'
+import { Select, SelectProps } from '../Select'
 
 const options = [
   { firstName: 'Larry', id: 1, lastName: 'McDonald' },
@@ -16,11 +17,10 @@ const getOptionLabel = option => `${option.firstName} ${option.lastName}`
 
 type Props = {
   hasInitialValue?: boolean
-  title?: string
 } & Partial<SelectProps>
 
 const Component: React.FC<Props> = props => {
-  const { hasInitialValue = true, label, title } = props
+  const { hasInitialValue = true, label } = props
 
   const initial = hasInitialValue && randomOption()
   const [value, setValue] = React.useState(initial)
@@ -31,7 +31,6 @@ const Component: React.FC<Props> = props => {
 
   return (
     <>
-      {title && <p>{title}:</p>}
       <Select
         getOptionKey={getOptionKey}
         getOptionLabel={getOptionLabel}
@@ -45,30 +44,18 @@ const Component: React.FC<Props> = props => {
   )
 }
 
-const Basic = () => <Component title="A basic select" />
-
-const Disabled = () => <Component disabled={true} title="Disabled" />
-
-const WithLabel = () => (
-  <Component label="Favorite Person" title='With "label" prop' />
-)
-
 const Placeholder = () => (
   <Component
     hasInitialValue={false}
     placeholder="Choose your bestest buddy"
-    title="With placeholder text (no selected value)"
+    label="With custom placeholder text (no selected value)"
   />
 )
 
 export const Examples = () => {
   return (
     <>
-      <Basic />
-      <hr />
-      <Disabled />
-      <hr />
-      <WithLabel />
+      <MultiProps />
       <hr />
       <Placeholder />
     </>
