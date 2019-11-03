@@ -85,7 +85,7 @@ input#{makeClassName('__selectInput')} {
   padding: 8px 12px;
   user-select: none;
 
-  &:hover:not(#{makeClassName('__noOptionsMessage')}) {
+  &#{makeClassName('__highlighted')} {
     background: $bg__optionHover;
   }
 

@@ -7,6 +7,7 @@ import { SvgWrapper } from './components'
 import { ClearX, DownArrowSVG } from './svg'
 
 import {
+  DEFAULT_GET_OPTION_KEY,
   DEFAULT_GET_OPTION_LABEL,
   DEFAULT_GET_OPTION_VALUE,
   DEFAULT_NO_OPTIONS_MESSAGE,
@@ -111,7 +112,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   const {
     clearable = true,
     disabled = false,
-    getOptionKey,
+    getOptionKey = DEFAULT_GET_OPTION_KEY,
     getOptionLabel = DEFAULT_GET_OPTION_LABEL,
     getOptionValue = DEFAULT_GET_OPTION_VALUE,
     label,
@@ -126,7 +127,13 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     reducer,
     initialSelectState(options),
   )
-  const { active, inputValue, menuIsOpen, visibleOptions } = state
+  const {
+    active,
+    highlightedOption,
+    inputValue,
+    menuIsOpen,
+    visibleOptions,
+  } = state
 
   // eslint-disable-next-line no-plusplus
   const id = React.useRef(++nextId) // unique ID for each instance
@@ -156,6 +163,10 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     if (inputRef && inputRef.current) {
       inputRef.current.focus()
     }
+  }
+
+  const setHighlightedOption = option => {
+    dispatch({ option, props, type: SelectActionType.setHighlighted })
   }
 
   // callback for handling clicks within the parent element
@@ -215,6 +226,10 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   const handleOptionMouseDown = event => {
     event.preventDefault()
     event.stopPropagation()
+  }
+
+  const handleOptionMouseOver = (event, option) => {
+    setHighlightedOption(option)
   }
 
   /**
@@ -315,17 +330,23 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             {visibleOptions.length ? (
               visibleOptions.map((option, idx) => {
                 const key = getOptionKey ? getOptionKey(option) : idx
+
+                const isHighlightedOption =
+                  key === getOptionKey(highlightedOption)
+
                 const isSelectedOption =
                   getOptionValue(option) === getOptionValue(value)
 
                 return (
                   <div
                     className={classNames(styles.option, {
+                      [styles.highlighted]: isHighlightedOption,
                       [styles.selected]: isSelectedOption,
                     })}
                     key={key}
                     onClick={() => handleOptionClick(option)}
                     onMouseDown={handleOptionMouseDown}
+                    onMouseOver={event => handleOptionMouseOver(event, option)}
                   >
                     {getOptionLabel(option)}
                   </div>

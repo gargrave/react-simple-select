@@ -13,8 +13,10 @@ describe('Select Reducer', () => {
   describe('initial state', () => {
     it('initializes state correctly with no args', () => {
       const result = initialSelectState()
+
       expect(result).toEqual({
         active: false,
+        highlightedOption: undefined,
         inputValue: '',
         menuIsOpen: false,
         visibleOptions: [],
@@ -24,8 +26,10 @@ describe('Select Reducer', () => {
     it('initializes state correctly with custom args', () => {
       const options = ['a', 'b', 'c']
       const result = initialSelectState(options)
+
       expect(result).toEqual({
         active: false,
+        highlightedOption: options[0],
         inputValue: '',
         menuIsOpen: false,
         visibleOptions: options,
@@ -53,11 +57,13 @@ describe('Select Reducer', () => {
 
   describe('blur', () => {
     beforeEach(() => {
+      const visibleOptions = ['a', 'b', 'c']
       state = {
         active: true,
+        highlightedOption: visibleOptions[1],
         inputValue: 'oh hai',
         menuIsOpen: true,
-        visibleOptions: ['a', 'b', 'c'],
+        visibleOptions,
       }
     })
 
@@ -95,6 +101,7 @@ describe('Select Reducer', () => {
     beforeEach(() => {
       state = {
         active: true,
+        highlightedOption: initialOptions[1],
         inputValue: '',
         menuIsOpen: true,
         visibleOptions: initialOptions,
@@ -104,16 +111,17 @@ describe('Select Reducer', () => {
     it('filters options displayed based on search results', () => {
       const action = {
         inputValue: 'o',
-        props: {
-          options: initialOptions,
-        } as any,
+        props: { options: initialOptions } as any,
         type: SelectActionType.inputChange,
       }
       const result = reducer(state, action)
+      const visibleOptions = ['orange', 'yellow']
+
       expect(result).toEqual({
         ...state,
+        highlightedOption: visibleOptions[0],
         inputValue: action.inputValue,
-        visibleOptions: ['orange', 'yellow'],
+        visibleOptions,
       })
     })
 
@@ -125,18 +133,28 @@ describe('Select Reducer', () => {
         type: SelectActionType.inputChange,
       }
       const result = reducer(state, action)
+
       expect(result.menuIsOpen).toBe(true)
     })
   })
 
   describe('openMenu', () => {
     it('updates the state to open the menu', () => {
-      const state = initialSelectState()
-      const action = { props: {} as any, type: SelectActionType.openMenu }
+      const options = ['a', 'b', 'c']
+      const state = {
+        ...initialSelectState(options),
+        highlightedOption: options[1],
+      }
+      const action = {
+        props: { options } as any,
+        type: SelectActionType.openMenu,
+      }
       const result = reducer(state, action)
+
       expect(result).toEqual({
         ...state,
         active: true,
+        highlightedOption: options[0],
         menuIsOpen: true,
       })
     })
@@ -144,19 +162,22 @@ describe('Select Reducer', () => {
 
   describe('closeMenu', () => {
     beforeEach(() => {
+      const options = ['a', 'b', 'c']
       state = {
-        ...initialSelectState(),
+        ...initialSelectState(options),
+        highlightedOption: options[1],
         inputValue: 'something',
         menuIsOpen: true,
-        visibleOptions: ['a', 'b', 'c'],
       }
     })
 
     it('updates the state to close and reset the menu with default options', () => {
       const action = { props: {} as any, type: SelectActionType.closeMenu }
       const result = reducer(state, action)
+
       expect(result).toEqual({
         ...state,
+        highlightedOption: undefined,
         inputValue: '',
         menuIsOpen: false,
         visibleOptions: [],
@@ -170,12 +191,20 @@ describe('Select Reducer', () => {
         type: SelectActionType.closeMenu,
       }
       const result = reducer(state, action)
+
       expect(result).toEqual({
         ...state,
+        highlightedOption: options[0],
         inputValue: '',
         menuIsOpen: false,
         visibleOptions: options,
       })
     })
+  })
+
+  describe('setHighlighted', () => {
+    it.todo('updates the highlighted option to the specified option')
+
+    it.todo('users the first option as a fallback value')
   })
 })

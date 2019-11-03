@@ -12,21 +12,24 @@ const getFilteredOptions = (props: SelectProps, inputValue: string): any[] => {
 }
 
 export enum SelectActionType {
-  blur,
   focus,
+  blur,
   inputChange,
   openMenu,
   closeMenu,
+  setHighlighted,
 }
 
 type SelectReducerAction = {
   inputValue?: string
+  option?: any
   props: SelectProps
   type: SelectActionType
 }
 
 export type SelectState = {
   active: boolean
+  highlightedOption: any
   inputValue: string
   menuIsOpen: boolean
   visibleOptions: any[]
@@ -34,6 +37,7 @@ export type SelectState = {
 
 export const initialSelectState = (options: any[] = []): SelectState => ({
   active: false,
+  highlightedOption: options[0],
   inputValue: '',
   menuIsOpen: false,
   visibleOptions: options,
@@ -50,41 +54,66 @@ export const reducer = (
         active: true,
       }
 
-    case SelectActionType.blur:
+    case SelectActionType.blur: {
+      const visibleOptions = action.props.options || []
+      const highlightedOption = visibleOptions[0]
+
       return {
         ...state,
         active: false,
+        highlightedOption,
         inputValue: '',
         menuIsOpen: false,
-        visibleOptions: action.props.options || [],
+        visibleOptions,
       }
+    }
 
     case SelectActionType.inputChange: {
       const props = action.props || ({} as SelectProps) // eslint-disable-line
       const value = action.inputValue || ''
+      const visibleOptions = getFilteredOptions(props, value)
+      const highlightedOption = visibleOptions[0]
 
       return {
         ...state,
+        highlightedOption,
         inputValue: value,
         menuIsOpen: true,
-        visibleOptions: getFilteredOptions(props, value),
+        visibleOptions,
       }
     }
 
-    case SelectActionType.openMenu:
+    case SelectActionType.openMenu: {
+      const highlightedOption = (action.props.options || [])[0]
+
       return {
         ...state,
         active: true,
+        highlightedOption,
         menuIsOpen: true,
       }
+    }
 
     case SelectActionType.closeMenu:
+      const visibleOptions = action.props.options || []
+      const highlightedOption = visibleOptions[0]
+
       return {
         ...state,
+        highlightedOption,
         inputValue: '',
         menuIsOpen: false,
-        visibleOptions: action.props.options || [],
+        visibleOptions,
       }
+
+    case SelectActionType.setHighlighted: {
+      const highlightedOption = action.option || state.visibleOptions[0]
+
+      return {
+        ...state,
+        highlightedOption,
+      }
+    }
 
     default:
       return state

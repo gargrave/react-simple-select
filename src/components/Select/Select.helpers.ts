@@ -2,6 +2,7 @@ export const DEFAULT_CSS_CLASS_BASE = 'reactSimpleSelect'
 export const DEFAULT_NO_OPTIONS_MESSAGE = 'No Options'
 export const DEFAULT_PLACEHOLDER = 'Select...'
 
+export const DEFAULT_GET_OPTION_KEY = option => option
 export const DEFAULT_GET_OPTION_VALUE = option => option
 export const DEFAULT_GET_OPTION_LABEL = option => `${option}`
 
@@ -16,6 +17,7 @@ export const styles = {
   currentValue: css('__currentValue'),
   disabled: css('__disabled'),
   hidden: css('__hidden'),
+  highlighted: css('__highlighted'),
   inputWrapper: css('__inputWrapper'),
   label: css('__label'),
   labelWrapper: css('__labelWrapper'),
