@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from 'react'
 
-import { useOutsideClick } from '../../hooks'
-import { classNames } from '../../utils'
+import { useHotkeys, useOutsideClick } from '../../hooks'
+import { classNames, Keys } from '../../utils'
 import { SvgWrapper } from './components'
 import { ClearX, DownArrowSVG } from './svg'
 
@@ -165,11 +165,46 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     }
   }
 
+  const decrementHighlightedOption = () => {
+    dispatch({
+      payload: { highlightIncrement: -1 },
+      props,
+      type: SelectActionType.setHighlighted,
+    })
+  }
+
+  const incrementHighlightedOption = () => {
+    dispatch({
+      payload: { highlightIncrement: 1 },
+      props,
+      type: SelectActionType.setHighlighted,
+    })
+  }
+
   const setHighlightedOption = (highlightIdx: number) => {
     dispatch({
       payload: { highlightIdx },
       props,
       type: SelectActionType.setHighlighted,
+    })
+  }
+
+  // ============================================================
+  //  Keyboard handlers
+  // ============================================================
+  const handleUpKey = () => {
+    decrementHighlightedOption()
+  }
+
+  const handleDownKey = () => {
+    incrementHighlightedOption()
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      inputValue: event.target.value,
+      props,
+      type: SelectActionType.inputChange,
     })
   }
 
@@ -198,14 +233,6 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
 
   const handOutsideClick = (_event: Event) => {
     dispatch({ props, type: SelectActionType.blur })
-  }
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      inputValue: event.target.value,
-      props,
-      type: SelectActionType.inputChange,
-    })
   }
 
   const handleInputFocus = () => {
@@ -267,6 +294,14 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     containerRef,
     onInsideClick: handleInsideClick,
     onOutsideClick: handOutsideClick,
+  })
+
+  useHotkeys({
+    active,
+    handlers: {
+      [Keys.ArrowUp]: handleUpKey,
+      [Keys.ArrowDown]: handleDownKey,
+    },
   })
 
   return (

@@ -12,6 +12,7 @@ import * as reducerImports from './Select.reducer'
 import { SelectActionType } from './Select.reducer'
 
 import { Select, SelectProps } from './Select'
+import { Keys } from '../../utils'
 
 const cssMap = (className: string): string => `.${cssHelper(className)}`
 const css = (classNames: string | string[]): string =>
@@ -272,7 +273,7 @@ describe('Select', () => {
       fireEvent.mouseOver(q(css('__option'))[0])
       expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
 
-      // ensure that our "close menu" dispatch call is NOT called when clicking on the clear icon
+      // manually inspect the dispatch/reducer call for the correct data
       const lastCall = reducerSpy.mock.calls[currentReducerCalls]
       const [_state, action] = lastCall
       expect(action.type).toBe(SelectActionType.setHighlighted)
@@ -345,6 +346,56 @@ describe('Select', () => {
         <Select {...defaultProps} clearable={false} />,
       )
       expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Keyboard', () => {
+    it('increments the current selection on down key', () => {
+      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
+      const { container } = render(<Select {...defaultProps} />)
+
+      const q = query => container.querySelectorAll(query)
+      const containerEl = container.querySelector(
+        css('__container'),
+      ) as HTMLElement
+
+      fireEvent.mouseDown(containerEl)
+      // just to be sure the menu opened correctly...
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
+
+      const currentReducerCalls = reducerSpy.mock.calls.length
+      fireEvent.keyDown(container, { code: Keys.ArrowDown })
+
+      // manually inspect the dispatch/reducer call for the correct data
+      expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
+      const lastCall = reducerSpy.mock.calls[currentReducerCalls]
+      const [_state, action] = lastCall
+      expect(action.type).toBe(SelectActionType.setHighlighted)
+      expect(action.payload).toEqual({ highlightIncrement: 1 })
+    })
+
+    it('decrements the current selection on up key', () => {
+      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
+      const { container } = render(<Select {...defaultProps} />)
+
+      const q = query => container.querySelectorAll(query)
+      const containerEl = container.querySelector(
+        css('__container'),
+      ) as HTMLElement
+
+      fireEvent.mouseDown(containerEl)
+      // just to be sure the menu opened correctly...
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
+
+      const currentReducerCalls = reducerSpy.mock.calls.length
+      fireEvent.keyDown(container, { code: Keys.ArrowUp })
+
+      // manually inspect the dispatch/reducer call for the correct data
+      expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
+      const lastCall = reducerSpy.mock.calls[currentReducerCalls]
+      const [_state, action] = lastCall
+      expect(action.type).toBe(SelectActionType.setHighlighted)
+      expect(action.payload).toEqual({ highlightIncrement: -1 })
     })
   })
 })
