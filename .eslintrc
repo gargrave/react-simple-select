@@ -77,9 +77,9 @@
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/explicit-member-accessibility": 0,
     "@typescript-eslint/interface-name-prefix": ["warn", "always"],
-    "@typescript-eslint/no-object-literal-type-assertion": [
+    "@typescript-eslint/consistent-type-assertions": [
       "warn",
-      { "allowAsParameter": true }
+      { "assertionStyle": "as", "objectLiteralTypeAssertions": "never" }
     ],
     "@typescript-eslint/no-non-null-assertion": "warn",
     "@typescript-eslint/no-parameter-properties": 0,
@@ -98,7 +98,7 @@
         "sort-keys": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/no-object-literal-type-assertion": "off"
+        "@typescript-eslint/consistent-type-assertions": "off"
       }
     },
     {

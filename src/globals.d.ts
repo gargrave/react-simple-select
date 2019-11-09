@@ -1,6 +1,4 @@
 /// <reference types="node" />
-/// <reference types="react" />
-/// <reference types="react-dom" />
 
 declare namespace NodeJS {
   // eslint-disable-next-line @typescript-eslint/interface-name-prefix
