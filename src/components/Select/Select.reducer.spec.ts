@@ -4,6 +4,7 @@ import {
   initialSelectState,
   reducer,
   SelectActionType,
+  SelectReducerAction,
   SelectState,
 } from './Select.reducer'
 
@@ -16,7 +17,7 @@ describe('Select Reducer', () => {
 
       expect(result).toEqual({
         active: false,
-        highlightedOption: undefined,
+        highlightedIdx: 0,
         inputValue: '',
         menuIsOpen: false,
         visibleOptions: [],
@@ -29,7 +30,7 @@ describe('Select Reducer', () => {
 
       expect(result).toEqual({
         active: false,
-        highlightedOption: options[0],
+        highlightedIdx: 0,
         inputValue: '',
         menuIsOpen: false,
         visibleOptions: options,
@@ -60,7 +61,7 @@ describe('Select Reducer', () => {
       const visibleOptions = ['a', 'b', 'c']
       state = {
         active: true,
-        highlightedOption: visibleOptions[1],
+        highlightedIdx: 1,
         inputValue: 'oh hai',
         menuIsOpen: true,
         visibleOptions,
@@ -101,7 +102,7 @@ describe('Select Reducer', () => {
     beforeEach(() => {
       state = {
         active: true,
-        highlightedOption: initialOptions[1],
+        highlightedIdx: 1,
         inputValue: '',
         menuIsOpen: true,
         visibleOptions: initialOptions,
@@ -119,7 +120,7 @@ describe('Select Reducer', () => {
 
       expect(result).toEqual({
         ...state,
-        highlightedOption: visibleOptions[0],
+        highlightedIdx: 0,
         inputValue: action.inputValue,
         visibleOptions,
       })
@@ -143,7 +144,7 @@ describe('Select Reducer', () => {
       const options = ['a', 'b', 'c']
       const state = {
         ...initialSelectState(options),
-        highlightedOption: options[1],
+        highlightedIdx: 1,
       }
       const action = {
         props: { options } as any,
@@ -154,7 +155,7 @@ describe('Select Reducer', () => {
       expect(result).toEqual({
         ...state,
         active: true,
-        highlightedOption: options[0],
+        highlightedIdx: 0,
         menuIsOpen: true,
       })
     })
@@ -165,7 +166,7 @@ describe('Select Reducer', () => {
       const options = ['a', 'b', 'c']
       state = {
         ...initialSelectState(options),
-        highlightedOption: options[1],
+        highlightedIdx: 1,
         inputValue: 'something',
         menuIsOpen: true,
       }
@@ -177,7 +178,7 @@ describe('Select Reducer', () => {
 
       expect(result).toEqual({
         ...state,
-        highlightedOption: undefined,
+        highlightedIdx: 0,
         inputValue: '',
         menuIsOpen: false,
         visibleOptions: [],
@@ -194,7 +195,7 @@ describe('Select Reducer', () => {
 
       expect(result).toEqual({
         ...state,
-        highlightedOption: options[0],
+        highlightedIdx: 0,
         inputValue: '',
         menuIsOpen: false,
         visibleOptions: options,
@@ -203,8 +204,91 @@ describe('Select Reducer', () => {
   })
 
   describe('setHighlighted', () => {
-    it.todo('updates the highlighted option to the specified option')
+    const options = ['a', 'b', 'c', 'd', 'e', 'f']
 
-    it.todo('users the first option as a fallback value')
+    beforeEach(() => {
+      state = {
+        ...initialSelectState(options),
+        highlightedIdx: 2,
+      }
+    })
+
+    it('updates the highlighted index directly to the specified index', () => {
+      const action: SelectReducerAction = {
+        payload: { highlightIdx: 4 },
+        props: {} as any,
+        type: SelectActionType.setHighlighted,
+      }
+      const result = reducer(state, action)
+
+      expect(result).toEqual({
+        ...state,
+        highlightedIdx: 4,
+      })
+    })
+
+    it('increments highlight by 1', () => {
+      const action: SelectReducerAction = {
+        payload: { highlightIncrement: 1 },
+        props: {} as any,
+        type: SelectActionType.setHighlighted,
+      }
+      const result = reducer(state, action)
+
+      expect(result).toEqual({
+        ...state,
+        highlightedIdx: 3,
+      })
+    })
+
+    it('increments highlight by -1', () => {
+      const action: SelectReducerAction = {
+        payload: { highlightIncrement: -1 },
+        props: {} as any,
+        type: SelectActionType.setHighlighted,
+      }
+      const result = reducer(state, action)
+
+      expect(result).toEqual({
+        ...state,
+        highlightedIdx: 1,
+      })
+    })
+
+    it('wraps safely from last index to first index', () => {
+      const stateWithHighIdx = {
+        ...state,
+        highlightedIdx: options.length - 1,
+      }
+      const action: SelectReducerAction = {
+        payload: { highlightIncrement: 1 },
+        props: {} as any,
+        type: SelectActionType.setHighlighted,
+      }
+      const result = reducer(stateWithHighIdx, action)
+
+      expect(result).toEqual({
+        ...state,
+        highlightedIdx: 0,
+      })
+    })
+
+    it('wraps safely from first index to last index', () => {
+      const stateWithLowIdx = {
+        ...state,
+        highlightedIdx: 0,
+      }
+      const action: SelectReducerAction = {
+        payload: { highlightIncrement: -1 },
+        props: {} as any,
+        type: SelectActionType.setHighlighted,
+      }
+      const result = reducer(stateWithLowIdx, action)
+
+      expect(result).toEqual({
+        ...state,
+        highlightedIdx: options.length - 1,
+      })
+    })
   })
 })

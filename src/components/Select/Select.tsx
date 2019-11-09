@@ -129,7 +129,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   )
   const {
     active,
-    highlightedOption,
+    highlightedIdx,
     inputValue,
     menuIsOpen,
     visibleOptions,
@@ -165,8 +165,12 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     }
   }
 
-  const setHighlightedOption = option => {
-    dispatch({ option, props, type: SelectActionType.setHighlighted })
+  const setHighlightedOption = (highlightIdx: number) => {
+    dispatch({
+      payload: { highlightIdx },
+      props,
+      type: SelectActionType.setHighlighted,
+    })
   }
 
   // callback for handling clicks within the parent element
@@ -228,8 +232,8 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     event.stopPropagation()
   }
 
-  const handleOptionMouseOver = (event, option) => {
-    setHighlightedOption(option)
+  const handleOptionMouseOver = (event, idx) => {
+    setHighlightedOption(idx)
   }
 
   /**
@@ -331,8 +335,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
               visibleOptions.map((option, idx) => {
                 const key = getOptionKey ? getOptionKey(option) : idx
 
-                const isHighlightedOption =
-                  key === getOptionKey(highlightedOption)
+                const isHighlightedOption = idx === highlightedIdx
 
                 const isSelectedOption =
                   getOptionValue(option) === getOptionValue(value)
@@ -346,7 +349,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
                     key={key}
                     onClick={() => handleOptionClick(option)}
                     onMouseDown={handleOptionMouseDown}
-                    onMouseOver={event => handleOptionMouseOver(event, option)}
+                    onMouseOver={event => handleOptionMouseOver(event, idx)}
                   >
                     {getOptionLabel(option)}
                   </div>

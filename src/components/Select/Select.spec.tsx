@@ -94,9 +94,9 @@ describe('Select', () => {
 
       // does not open the menu when clicked
       expect(q('.optionsWrapper')).toHaveLength(0)
-      fireEvent.mouseDown(container.querySelector(
-        css('__container'),
-      ) as HTMLElement)
+      fireEvent.mouseDown(
+        container.querySelector(css('__container')) as HTMLElement,
+      )
       expect(q('.optionsWrapper')).toHaveLength(0)
       expect(q('.option')).toHaveLength(0)
 
@@ -114,9 +114,9 @@ describe('Select', () => {
       const q = query => container.querySelectorAll(query)
       expect(queryByText(DEFAULT_NO_OPTIONS_MESSAGE)).not.toBeInTheDocument()
       expect(q(css('__noOptionsMessage'))).toHaveLength(0)
-      fireEvent.mouseDown(container.querySelector(
-        css('__container'),
-      ) as HTMLElement)
+      fireEvent.mouseDown(
+        container.querySelector(css('__container')) as HTMLElement,
+      )
       expect(getByText(DEFAULT_NO_OPTIONS_MESSAGE)).toBeInTheDocument()
       expect(q(css('__noOptionsMessage'))).toHaveLength(1)
     })
@@ -134,9 +134,9 @@ describe('Select', () => {
       const q = query => container.querySelectorAll(query)
       expect(queryByText(noOptionsMsg)).not.toBeInTheDocument()
       expect(q(css('__noOptionsMessage'))).toHaveLength(0)
-      fireEvent.mouseDown(container.querySelector(
-        css('__container'),
-      ) as HTMLElement)
+      fireEvent.mouseDown(
+        container.querySelector(css('__container')) as HTMLElement,
+      )
       expect(getByText(noOptionsMsg)).toBeInTheDocument()
       expect(q(css('__noOptionsMessage'))).toHaveLength(1)
     })
@@ -206,16 +206,16 @@ describe('Select', () => {
     })
   })
 
-  describe('Interactivity', () => {
+  describe('Mouse/Click Interactivity', () => {
     it('shows the options list on mouseDown', () => {
       const { container } = render(<Select {...defaultProps} />)
 
       const q = query => container.querySelectorAll(query)
       expect(q(css('__optionsWrapper'))).toHaveLength(0)
       // does not render the options wrapper until it is focused
-      fireEvent.mouseDown(container.querySelector(
-        css('__container'),
-      ) as HTMLElement)
+      fireEvent.mouseDown(
+        container.querySelector(css('__container')) as HTMLElement,
+      )
       expect(q(css('__optionsWrapper'))).toHaveLength(1)
       expect(q(css('__option'))).toHaveLength(options.length)
     })
@@ -258,6 +258,27 @@ describe('Select', () => {
       const lastActionType = allActionTypes[allActionTypes.length - 1]
       expect(allActionTypes.includes(SelectActionType.closeMenu)).toBe(false)
       expect(lastActionType).toBe(SelectActionType.blur)
+    })
+
+    it('highlights an option on mouse over', () => {
+      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
+      const { container } = render(<Select {...defaultProps} />)
+
+      const q = query => container.querySelectorAll(query)
+      fireEvent.mouseDown(container.firstChild as HTMLElement)
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
+
+      const currentReducerCalls = reducerSpy.mock.calls.length
+      fireEvent.mouseOver(q(css('__option'))[0])
+      expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
+
+      // ensure that our "close menu" dispatch call is NOT called when clicking on the clear icon
+      const lastCall = reducerSpy.mock.calls[currentReducerCalls]
+      const [_state, action] = lastCall
+      expect(action.type).toBe(SelectActionType.setHighlighted)
+      expect(action.payload).toEqual({
+        highlightIdx: 0,
+      })
     })
   })
 
