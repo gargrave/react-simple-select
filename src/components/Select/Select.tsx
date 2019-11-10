@@ -200,6 +200,14 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     incrementHighlightedOption()
   }
 
+  const handleEnterKey = () => {
+    const option = visibleOptions[highlightedIdx]
+    if (option) {
+      onChange(option)
+      dispatch({ props, type: SelectActionType.blur })
+    }
+  }
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       inputValue: event.target.value,
@@ -296,11 +304,13 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     onOutsideClick: handOutsideClick,
   })
 
+  // TODO: add handling for enter key
   useHotkeys({
     active,
     handlers: {
       [Keys.ArrowUp]: handleUpKey,
       [Keys.ArrowDown]: handleDownKey,
+      [Keys.Enter]: handleEnterKey,
     },
   })
 
