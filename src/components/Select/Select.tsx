@@ -165,21 +165,21 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     }
   }
 
-  const decrementHighlightedOption = () => {
+  const decrementHighlightedOption = React.useCallback(() => {
     dispatch({
       payload: { highlightIncrement: -1 },
       props,
       type: SelectActionType.setHighlighted,
     })
-  }
+  }, [props])
 
-  const incrementHighlightedOption = () => {
+  const incrementHighlightedOption = React.useCallback(() => {
     dispatch({
       payload: { highlightIncrement: 1 },
       props,
       type: SelectActionType.setHighlighted,
     })
-  }
+  }, [props])
 
   const setHighlightedOption = (highlightIdx: number) => {
     dispatch({
@@ -189,24 +189,31 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     })
   }
 
+  const setSelectedOption = React.useCallback(
+    option => {
+      onChange(option)
+      dispatch({ props, type: SelectActionType.blur })
+    },
+    [onChange, props],
+  )
+
   // ============================================================
   //  Keyboard handlers
   // ============================================================
-  const handleUpKey = () => {
+  const handleUpKey = React.useCallback(() => {
     decrementHighlightedOption()
-  }
+  }, [decrementHighlightedOption])
 
-  const handleDownKey = () => {
+  const handleDownKey = React.useCallback(() => {
     incrementHighlightedOption()
-  }
+  }, [incrementHighlightedOption])
 
-  const handleEnterKey = () => {
+  const handleEnterKey = React.useCallback(() => {
     const option = visibleOptions[highlightedIdx]
     if (option) {
-      onChange(option)
-      dispatch({ props, type: SelectActionType.blur })
+      setSelectedOption(option)
     }
-  }
+  }, [highlightedIdx, setSelectedOption, visibleOptions])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
@@ -304,7 +311,6 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     onOutsideClick: handOutsideClick,
   })
 
-  // TODO: add handling for enter key
   useHotkeys({
     active,
     handlers: {
