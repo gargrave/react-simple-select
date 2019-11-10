@@ -3,34 +3,21 @@ import '@testing-library/jest-dom/extend-expect'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 
 import {
-  css as cssHelper,
   DEFAULT_NO_OPTIONS_MESSAGE,
   DEFAULT_PLACEHOLDER,
   TEST_ID_CLEAR_ICON,
 } from './Select.helpers'
-import * as reducerImports from './Select.reducer'
-import { SelectActionType } from './Select.reducer'
+import {
+  css,
+  getUserFullName,
+  getUserIdString,
+  usersOptions as options,
+} from './tests/testUtils'
 
 import { Select, SelectProps } from './Select'
-import { Keys } from '../../utils'
 
-const cssMap = (className: string): string => `.${cssHelper(className)}`
-const css = (classNames: string | string[]): string =>
-  (Array.isArray(classNames)
-    ? classNames.map(cssMap)
-    : [classNames].map(cssMap)
-  ).join('')
-
-const options = [
-  { id: 1, firstName: 'Larry', lastName: 'McDonald' },
-  { id: 2, firstName: 'Lacey', lastName: 'Struthers' },
-  { id: 3, firstName: 'Sandra', lastName: 'Callahan' },
-  { id: 4, firstName: 'Billy', lastName: 'Pickles' },
-  { id: 5, firstName: 'Davie', lastName: 'McBavie' },
-]
-
-const userIdString = user => `${user.id}`
-const userFullName = user => `${user.firstName} ${user.lastName}`
+import * as reducerImports from './Select.reducer' // import all for mocking
+const { SelectActionType } = reducerImports
 
 describe('Select', () => {
   let defaultProps: SelectProps
@@ -41,9 +28,9 @@ describe('Select', () => {
     defaultProps = {
       clearable: true,
       disabled: false,
-      getOptionKey: jest.fn(userIdString),
-      getOptionLabel: jest.fn(userFullName),
-      getOptionValue: jest.fn(userIdString),
+      getOptionKey: jest.fn(getUserIdString),
+      getOptionLabel: jest.fn(getUserFullName),
+      getOptionValue: jest.fn(getUserIdString),
       label: undefined,
       noOptionsMessage: undefined,
       onChange: jest.fn(),
@@ -147,7 +134,7 @@ describe('Select', () => {
     it('displays the "value" prop instead of a placeholder', () => {
       const { placeholder = DEFAULT_PLACEHOLDER } = defaultProps
       const value = options[0]
-      const label = userFullName(value)
+      const label = getUserFullName(value)
       const { getByText, queryByText } = render(
         <Select {...defaultProps} value={value} />,
       )
@@ -346,84 +333,6 @@ describe('Select', () => {
         <Select {...defaultProps} clearable={false} />,
       )
       expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
-    })
-  })
-
-  describe('Keyboard', () => {
-    it('increments the current highlighted option on down key', () => {
-      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
-      const { container } = render(<Select {...defaultProps} />)
-
-      const q = query => container.querySelectorAll(query)
-      const containerEl = container.querySelector(
-        css('__container'),
-      ) as HTMLElement
-
-      fireEvent.mouseDown(containerEl)
-      // just to be sure the menu opened correctly...
-      expect(q(css('__optionsWrapper'))).toHaveLength(1)
-
-      const currentReducerCalls = reducerSpy.mock.calls.length
-      fireEvent.keyDown(container, { code: Keys.ArrowDown })
-
-      // manually inspect the dispatch/reducer call for the correct data
-      expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
-      const lastCall = reducerSpy.mock.calls[currentReducerCalls]
-      const [_state, action] = lastCall
-      expect(action.type).toBe(SelectActionType.setHighlighted)
-      expect(action.payload).toEqual({ highlightIncrement: 1 })
-    })
-
-    it('decrements the current highlighted option on up key', () => {
-      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
-      const { container } = render(<Select {...defaultProps} />)
-
-      const q = query => container.querySelectorAll(query)
-      const containerEl = container.querySelector(
-        css('__container'),
-      ) as HTMLElement
-
-      fireEvent.mouseDown(containerEl)
-      // just to be sure the menu opened correctly...
-      expect(q(css('__optionsWrapper'))).toHaveLength(1)
-
-      const currentReducerCalls = reducerSpy.mock.calls.length
-      fireEvent.keyDown(container, { code: Keys.ArrowUp })
-
-      // manually inspect the dispatch/reducer call for the correct data
-      expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
-      const lastCall = reducerSpy.mock.calls[currentReducerCalls]
-      const [_state, action] = lastCall
-      expect(action.type).toBe(SelectActionType.setHighlighted)
-      expect(action.payload).toEqual({ highlightIncrement: -1 })
-    })
-
-    it('selects the currently-highlighted option on enter key', () => {
-      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
-      const { onChange } = defaultProps
-      const { container } = render(<Select {...defaultProps} />)
-
-      const q = query => container.querySelectorAll(query)
-      const containerEl = container.querySelector(
-        css('__container'),
-      ) as HTMLElement
-
-      fireEvent.mouseDown(containerEl)
-      // just to be sure the menu opened correctly...
-      expect(q(css('__optionsWrapper'))).toHaveLength(1)
-
-      fireEvent.keyDown(container, { code: Keys.ArrowDown })
-      const currentReducerCalls = reducerSpy.mock.calls.length
-      fireEvent.keyDown(container, { code: Keys.Enter })
-
-      expect(onChange).toHaveBeenCalledTimes(1)
-      expect(onChange).toHaveBeenCalledWith(options[1])
-
-      // manually inspect the dispatch/reducer call for the correct data
-      expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
-      const lastCall = reducerSpy.mock.calls[currentReducerCalls]
-      const [_state, action] = lastCall
-      expect(action.type).toBe(SelectActionType.blur)
     })
   })
 })
