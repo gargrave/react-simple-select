@@ -64,7 +64,43 @@ describe('Select :: Keyboard', () => {
       expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
       const lastCall = reducerSpy.mock.calls[currentReducerCalls]
       const [_state, action] = lastCall
-      expect(action.type).toBe(SelectActionType.blur)
+      expect(action.type).toBe(SelectActionType.closeMenu)
+    })
+
+    it('opens the menu on "Up" and "Down" key presses', () => {
+      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
+      const { container } = render(<Select {...defaultProps} />)
+
+      const q = query => container.querySelectorAll(query)
+      const containerEl = container.querySelector(
+        css('__container'),
+      ) as HTMLElement
+
+      // fireEvent.mouseDown(containerEl)
+      fireEvent.focus(container.querySelector('input') as HTMLElement)
+      expect(q(css('__optionsWrapper'))).toHaveLength(0)
+
+      let prevReducerCalls = reducerSpy.mock.calls.length
+      fireEvent.keyDown(containerEl, { code: Keys.ArrowUp })
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
+
+      expect(reducerSpy).toHaveBeenCalledTimes(prevReducerCalls + 1)
+      let lastCall = reducerSpy.mock.calls[prevReducerCalls]
+      expect(lastCall[1].type).toBe(SelectActionType.openMenu)
+
+      // now close the menu and do it again with "down"
+      fireEvent.keyDown(container, { code: Keys.Esc })
+      expect(q(css('__optionsWrapper'))).toHaveLength(0)
+      fireEvent.focus(container.querySelector('input') as HTMLElement)
+
+      prevReducerCalls = reducerSpy.mock.calls.length
+
+      fireEvent.keyDown(containerEl, { code: Keys.ArrowDown })
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
+
+      expect(reducerSpy).toHaveBeenCalledTimes(prevReducerCalls + 1)
+      lastCall = reducerSpy.mock.calls[prevReducerCalls]
+      expect(lastCall[1].type).toBe(SelectActionType.openMenu)
     })
 
     it('closes the menu and updates selection on "Enter" key', () => {
@@ -91,8 +127,7 @@ describe('Select :: Keyboard', () => {
       // manually inspect the dispatch/reducer call for the correct data
       expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
       const lastCall = reducerSpy.mock.calls[currentReducerCalls]
-      const [_state, action] = lastCall
-      expect(action.type).toBe(SelectActionType.blur)
+      expect(lastCall[1].type).toBe(SelectActionType.closeMenu)
     })
   })
 

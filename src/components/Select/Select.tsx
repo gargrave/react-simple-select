@@ -165,8 +165,12 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     }
   }
 
+  const openMenu = React.useCallback(() => {
+    dispatch({ props, type: SelectActionType.openMenu })
+  }, [props])
+
   const closeMenu = React.useCallback(() => {
-    dispatch({ props, type: SelectActionType.blur })
+    dispatch({ props, type: SelectActionType.closeMenu })
   }, [props])
 
   const decrementHighlightedOption = React.useCallback(() => {
@@ -205,12 +209,20 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   //  Keyboard handlers
   // ============================================================
   const handleUpKey = React.useCallback(() => {
-    decrementHighlightedOption()
-  }, [decrementHighlightedOption])
+    if (menuIsOpen) {
+      decrementHighlightedOption()
+    } else {
+      openMenu()
+    }
+  }, [decrementHighlightedOption, menuIsOpen, openMenu])
 
   const handleDownKey = React.useCallback(() => {
-    incrementHighlightedOption()
-  }, [incrementHighlightedOption])
+    if (menuIsOpen) {
+      incrementHighlightedOption()
+    } else {
+      openMenu()
+    }
+  }, [incrementHighlightedOption, menuIsOpen, openMenu])
 
   const handleEnterKey = React.useCallback(() => {
     const option = visibleOptions[highlightedIdx]
