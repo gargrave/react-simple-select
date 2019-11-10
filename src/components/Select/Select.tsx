@@ -196,9 +196,9 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   const setSelectedOption = React.useCallback(
     option => {
       onChange(option)
-      dispatch({ props, type: SelectActionType.blur })
+      closeMenu()
     },
-    [onChange, props],
+    [closeMenu, onChange],
   )
 
   // ============================================================
@@ -255,7 +255,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   }
 
   const handOutsideClick = (_event: Event) => {
-    dispatch({ props, type: SelectActionType.blur })
+    closeMenu()
   }
 
   const handleInputFocus = () => {
@@ -265,7 +265,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   }
 
   const handleInputBlur = () => {
-    dispatch({ props, type: SelectActionType.blur })
+    closeMenu()
   }
 
   /**
@@ -294,15 +294,15 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   const handleOptionClick = React.useCallback(
     option => {
       onChange(option)
-      dispatch({ props, type: SelectActionType.blur })
+      closeMenu()
     },
-    [onChange, props],
+    [closeMenu, onChange],
   )
 
   const handleClearClick = React.useCallback(() => {
     onChange(undefined)
-    dispatch({ props, type: SelectActionType.blur })
-  }, [onChange, props])
+    closeMenu()
+  }, [closeMenu, onChange])
 
   /**
    * Effect handler to focus the <input> element any time the wrapper is activated.
