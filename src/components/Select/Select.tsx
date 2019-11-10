@@ -165,6 +165,10 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     }
   }
 
+  const closeMenu = React.useCallback(() => {
+    dispatch({ props, type: SelectActionType.blur })
+  }, [props])
+
   const decrementHighlightedOption = React.useCallback(() => {
     dispatch({
       payload: { highlightIncrement: -1 },
@@ -214,6 +218,10 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
       setSelectedOption(option)
     }
   }, [highlightedIdx, setSelectedOption, visibleOptions])
+
+  const handleEscKey = React.useCallback(() => {
+    closeMenu()
+  }, [closeMenu])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
@@ -317,6 +325,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
       [Keys.ArrowUp]: handleUpKey,
       [Keys.ArrowDown]: handleDownKey,
       [Keys.Enter]: handleEnterKey,
+      [Keys.Esc]: handleEscKey,
     },
   })
 
