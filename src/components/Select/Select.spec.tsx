@@ -244,8 +244,8 @@ describe('Select', () => {
         ([_state, action]) => action.type,
       )
       const lastActionType = allActionTypes[allActionTypes.length - 1]
-      expect(allActionTypes.includes(SelectActionType.closeMenu)).toBe(false)
-      expect(lastActionType).toBe(SelectActionType.blur)
+      expect(lastActionType).toBe(SelectActionType.closeMenu)
+      expect(allActionTypes.includes(SelectActionType.blur)).toBe(false)
     })
 
     it('highlights an option on mouse over', () => {
@@ -318,7 +318,7 @@ describe('Select', () => {
       )
       const lastActionType = allActionTypes[allActionTypes.length - 1]
       expect(allActionTypes.includes(SelectActionType.openMenu)).toBe(false)
-      expect(lastActionType).toBe(SelectActionType.blur)
+      expect(lastActionType).toBe(SelectActionType.closeMenu)
     })
 
     it('does not render a "clear" icon when there is no selection', () => {

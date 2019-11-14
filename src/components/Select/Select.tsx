@@ -160,8 +160,14 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   const shouldRenderClearIcon = !disabled && clearable && value
 
   const focusInputElement = () => {
-    if (inputRef && inputRef.current) {
+    if (inputRef?.current) {
       inputRef.current.focus()
+    }
+  }
+
+  const blurInputElement = () => {
+    if (inputRef?.current) {
+      inputRef.current.blur()
     }
   }
 
@@ -171,8 +177,17 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
 
   const closeMenu = React.useCallback(() => {
     dispatch({ props, type: SelectActionType.closeMenu })
+    setTimeout(focusInputElement, 0)
   }, [props])
 
+  const blur = React.useCallback(() => {
+    dispatch({ props, type: SelectActionType.blur })
+    blurInputElement()
+  }, [props])
+
+  // ============================================================
+  //  Highlight/selection management
+  // ============================================================
   const decrementHighlightedOption = React.useCallback(() => {
     dispatch({
       payload: { highlightIncrement: -1 },
@@ -205,6 +220,13 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     [closeMenu, onChange],
   )
 
+  const selectHighlightedOption = React.useCallback(() => {
+    const option = visibleOptions[highlightedIdx]
+    if (option) {
+      setSelectedOption(option)
+    }
+  }, [highlightedIdx, setSelectedOption, visibleOptions])
+
   // ============================================================
   //  Keyboard handlers
   // ============================================================
@@ -225,15 +247,25 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   }, [incrementHighlightedOption, menuIsOpen, openMenu])
 
   const handleEnterKey = React.useCallback(() => {
-    const option = visibleOptions[highlightedIdx]
-    if (option) {
-      setSelectedOption(option)
-    }
-  }, [highlightedIdx, setSelectedOption, visibleOptions])
+    selectHighlightedOption()
+  }, [selectHighlightedOption])
 
   const handleEscKey = React.useCallback(() => {
     closeMenu()
   }, [closeMenu])
+
+  const handleTabKey = React.useCallback(
+    event => {
+      if (menuIsOpen && visibleOptions.length) {
+        event.preventDefault()
+        event.stopPropagation()
+        selectHighlightedOption()
+      } else {
+        blur()
+      }
+    },
+    [blur, menuIsOpen, selectHighlightedOption, visibleOptions],
+  )
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
@@ -252,10 +284,6 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
       ? openMenuMouseDownStopRefs
       : closedMenuMouseDownStopRefs
 
-    const actionType = menuIsOpen
-      ? SelectActionType.closeMenu
-      : SelectActionType.openMenu
-
     for (let i = 0; i < refs.length; i += 1) {
       const ref = refs[i].current
       if (ref && ref.contains(event.target)) {
@@ -263,21 +291,21 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
       }
     }
 
-    dispatch({ props, type: actionType })
+    if (menuIsOpen) {
+      closeMenu()
+    } else {
+      openMenu()
+    }
   }
 
   const handOutsideClick = (_event: Event) => {
-    closeMenu()
+    blur()
   }
 
   const handleInputFocus = () => {
-    if (disabled) return
+    if (disabled || active) return
 
     dispatch({ props, type: SelectActionType.focus })
-  }
-
-  const handleInputBlur = () => {
-    closeMenu()
   }
 
   /**
@@ -338,6 +366,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
       [Keys.ArrowDown]: handleDownKey,
       [Keys.Enter]: handleEnterKey,
       [Keys.Esc]: handleEscKey,
+      [Keys.Tab]: handleTabKey,
     },
   })
 
@@ -378,7 +407,6 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
               [styles.disabled]: disabled,
             })}
             disabled={disabled}
-            onBlur={handleInputBlur}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
             ref={inputRef}
