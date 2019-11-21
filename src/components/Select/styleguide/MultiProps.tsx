@@ -48,6 +48,7 @@ const MultiPropsHarness = props => {
   const [clearable, setClearable] = React.useState(true)
   const [disabled, setDisabled] = React.useState(false)
   const [showLabel, setShowLabel] = React.useState(true)
+  const [searchable, setSearchable] = React.useState(true)
 
   const handleChange = (person: Person) => {
     setValue(person)
@@ -63,17 +64,26 @@ const MultiPropsHarness = props => {
         label={showLabel ? 'Multiple Props' : undefined}
         onChange={handleChange}
         options={options}
+        searchable={searchable}
         value={value}
         {...props}
       />
 
       <div className="multiProps__controls">
-        <Toggle checked={clearable} label="Clearable" toggleFn={setClearable} />
-        <Toggle checked={disabled} label="Disabled" toggleFn={setDisabled} />
         <Toggle
           checked={showLabel}
           label="Show Label"
           toggleFn={setShowLabel}
+        />
+
+        <Toggle checked={clearable} label="Clearable" toggleFn={setClearable} />
+
+        <Toggle checked={disabled} label="Disabled" toggleFn={setDisabled} />
+
+        <Toggle
+          checked={searchable}
+          label="Searchable"
+          toggleFn={setSearchable}
         />
       </div>
     </>

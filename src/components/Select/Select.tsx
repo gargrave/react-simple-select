@@ -101,6 +101,13 @@ export type SelectProps = {
    */
   placeholder?: string
   /**
+   * **(Optional)** Whether the input should accept text input to filter options.
+   * Currently, this a simple exact-match search (i.e. no fuzzy search capabilities).
+   *
+   * **Default:** true
+   */
+  searchable?: boolean
+  /**
    * **(Optional)** The currently-selected value (if any); if not value is selected, the placeholder text will be shown.
    *
    * **Default:** `undefined`
@@ -120,6 +127,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     onChange,
     options = [],
     placeholder = DEFAULT_PLACEHOLDER,
+    searchable = true,
     value,
   } = props
 
@@ -409,6 +417,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             disabled={disabled}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            readOnly={!searchable}
             ref={inputRef}
             type="text"
             value={inputValue}
