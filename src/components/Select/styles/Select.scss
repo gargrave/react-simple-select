@@ -64,6 +64,7 @@
 
 input#{makeClassName('__selectInput')} {
   background: $bg__default;
+  cursor: default;
 
   @include disabled {
     background: $bg__disabled;
