@@ -277,7 +277,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
-      inputValue: event.target.value,
+      payload: { inputValue: event.target.value },
       props,
       type: SelectActionType.inputChange,
     })

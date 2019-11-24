@@ -110,8 +110,9 @@ describe('Select Reducer', () => {
     })
 
     it('filters options displayed based on search results', () => {
+      const inputValue = 'o'
       const action = {
-        inputValue: 'o',
+        payload: { inputValue },
         props: { options: initialOptions } as any,
         type: SelectActionType.inputChange,
       }
@@ -121,7 +122,7 @@ describe('Select Reducer', () => {
       expect(result).toEqual({
         ...state,
         highlightedIdx: 0,
-        inputValue: action.inputValue,
+        inputValue,
         visibleOptions,
       })
     })
@@ -129,7 +130,7 @@ describe('Select Reducer', () => {
     it('opens the menu if it is not already open', () => {
       state.menuIsOpen = false
       const action = {
-        inputValue: 'a',
+        payload: { inputValue: 'a' },
         props: {} as any,
         type: SelectActionType.inputChange,
       }

@@ -22,10 +22,10 @@ export enum SelectActionType {
 }
 
 export type SelectReducerAction = {
-  inputValue?: string
   payload?: {
     highlightIdx?: number
     highlightIncrement?: number
+    inputValue?: string
   }
   props: SelectProps
   type: SelectActionType
@@ -73,7 +73,7 @@ export const reducer = (
 
     case SelectActionType.inputChange: {
       const props = action.props || ({} as SelectProps) // eslint-disable-line
-      const value = action.inputValue || ''
+      const value = action.payload?.inputValue ?? ''
       const visibleOptions = getFilteredOptions(props, value)
 
       return {
