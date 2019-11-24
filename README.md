@@ -46,3 +46,10 @@ a little touching up before they will be very useful, but that is on my short li
 
 - [ ] Better code snippets for examples (snippets are hidden right now)
 - [ ] More examples for various props
+
+### Release Steps
+
+- Merge feature branch into `master`
+- Run `yarn release` to start the upgrade/build/release process
+  - This will use `np` to handle bumping version number, tagging, releasing to npm, etc.
+- Run `yarn styleguide:build` to rebuild the docs for the new version; commit and push

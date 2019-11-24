@@ -2,6 +2,7 @@
 .vscode
 
 config
+docs
 node_modules
 src
 
