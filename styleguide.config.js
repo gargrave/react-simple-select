@@ -3,7 +3,7 @@ const path = require('path')
 const pkg = require('./package.json')
 
 module.exports = {
-  components: ['src/components/Select/Select.tsx'],
+  components: ['src/components/Select/styleguide/SelectStyleguide.tsx'],
   propsParser: require('react-docgen-typescript').withCustomConfig(
     './tsconfig.json',
     [{}],

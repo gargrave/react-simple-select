@@ -16,12 +16,14 @@
     "prebuild": "jest && yarn clean:dist && yarn build:types && yarn build:styles",
     "build": "rollup -c",
     "build:types": "tsc --emitDeclarationOnly",
-    "build:styles": "node ./src/scripts/buildStyles.ts",
+    "build:examples": "node ./src/scripts/buildExamples.js && yarn prettier:examples",
+    "build:styles": "node ./src/scripts/buildStyles.js",
+    "prettier:examples": "prettier --config ./.prettierrc --write 'src/components/Select/styleguide/*.md'",
     "release": "yarn build && yarn np --yolo",
     "lint": "eslint --ext .ts,.tsx ./src",
     "test": "jest --watch",
-    "styleguide": "styleguidist server",
-    "styleguide:build": "styleguidist build"
+    "styleguide": "yarn build:examples && styleguidist server",
+    "styleguide:build": "yarn build:examples && styleguidist build"
   },
   "peerDependencies": {
     "react": "^16.11.0",

@@ -102,7 +102,7 @@
       }
     },
     {
-      "files": ["./src/scripts/**/*.ts"],
+      "files": ["./src/scripts/**/*"],
       "rules": {
         "@typescript-eslint/no-var-requires": "off"
       }

@@ -115,6 +115,11 @@ export type SelectProps = {
   value?: any
 }
 
+/**
+ * This is the primary component exported from react-simple-select.
+ *
+ * @visibleName Select
+ */
 export const Select: React.FC<SelectProps> = React.memo(props => {
   const {
     clearable = true,
