@@ -33,6 +33,7 @@ const Toggle = ({ checked, label, toggleFn }) => {
   )
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Example = () => {
   const [value, setValue] = React.useState(randomOption())
 
@@ -95,6 +96,7 @@ import {
   options,
 } from './SelectStyleguide.helpers'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Example = () => {
   const [value, setValue] = React.useState(null)
 

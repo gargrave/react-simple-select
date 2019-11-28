@@ -1,19 +1,10 @@
 import * as React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { cleanup, fireEvent, render } from '@testing-library/react'
+import { cleanup, render } from '@testing-library/react'
 
-import { DEFAULT_PLACEHOLDER } from '../Select.helpers'
-import {
-  css,
-  getUserFullName,
-  getUserIdString,
-  usersOptions as options,
-} from './testUtils'
+import { usersOptions as options } from './testUtils'
 
 import { Select, SelectProps } from '../Select'
-
-import * as reducerImports from '../Select.reducer' // import all for mocking
-const { SelectActionType } = reducerImports
 
 describe('Select :: Rendering', () => {
   let defaultProps: SelectProps

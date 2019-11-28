@@ -7,6 +7,7 @@ import {
   options,
 } from './SelectStyleguide.helpers'
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Example = () => {
   const [value, setValue] = React.useState(null)
 
