@@ -29,7 +29,6 @@ me (i.e. I cannot guarantee any level of support).
 
 These are few items on my current road map, although I don't have any specific ETA:
 
-- [ ] Better docs (see the section below)
 - [ ] Groupable options
 - [ ] Disabled options
 - [ ] Editable options (i.e. type to add a new option)
@@ -39,13 +38,7 @@ These are few items on my current road map, although I don't have any specific E
 ## Docs
 
 Right now (and for the foreseeable future), the docs are just my Styleguidist build.
-[Click here to view the docs](https://gargrave.github.io/react-simple-select). They need
-a little touching up before they will be very useful, but that is on my short list.
-
-### Docs Todo
-
-- [ ] Better code snippets for examples (snippets are hidden right now)
-- [ ] More examples for various props
+[Click here to view the docs](https://gargrave.github.io/react-simple-select). little touching up before they will be very useful, but that is on my short list.
 
 ### Release Steps
 
