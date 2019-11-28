@@ -103,6 +103,14 @@ input#{makeClassName('__selectInput')} {
     color: $textColor__disabled;
     cursor: default;
   }
+
+  @include disabled {
+    //background: $bg__disabled;
+    //color: $textColor__disabled;
+    background: pink;
+    color: darkorchid;
+    cursor: default;
+  }
 }
 
 @include style('__svgWrapper') {

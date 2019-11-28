@@ -94,6 +94,8 @@ export type SelectProps = {
    * If you need to customize this behavior, you will want to specify custom parsers in the `getOption...` props.
    */
   options: any[]
+
+  optionIsDisabled?: (option: any, idx: number) => boolean
   /**
    * **(Optional)** Custom placeholder text to display when there is no selected value.
    *
@@ -131,6 +133,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     noOptionsMessage = DEFAULT_NO_OPTIONS_MESSAGE,
     onChange,
     options = [],
+    optionIsDisabled,
     placeholder = DEFAULT_PLACEHOLDER,
     searchable = true,
     value,
@@ -449,21 +452,31 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
               visibleOptions.map((option, idx) => {
                 const key = getOptionKey ? getOptionKey(option) : idx
 
-                const isHighlightedOption = idx === highlightedIdx
-
                 const isSelectedOption =
                   getOptionValue(option) === getOptionValue(value)
+
+                const isHighlightedOption = idx === highlightedIdx
+                const isDisabled = optionIsDisabled
+                  ? optionIsDisabled(option, idx)
+                  : false
 
                 return (
                   <div
                     className={classNames(styles.option, {
                       [styles.highlighted]: isHighlightedOption,
                       [styles.selected]: isSelectedOption,
+                      [styles.disabled]: isDisabled,
                     })}
                     key={key}
-                    onClick={() => handleOptionClick(option)}
-                    onMouseDown={handleOptionMouseDown}
-                    onMouseOver={event => handleOptionMouseOver(event, idx)}
+                    onClick={
+                      isDisabled ? undefined : () => handleOptionClick(option)
+                    }
+                    onMouseDown={isDisabled ? undefined : handleOptionMouseDown}
+                    onMouseOver={
+                      isDisabled
+                        ? undefined
+                        : event => handleOptionMouseOver(event, idx)
+                    }
                   >
                     {getOptionLabel(option)}
                   </div>
