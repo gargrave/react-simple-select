@@ -236,12 +236,20 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     [closeMenu, onChange],
   )
 
+  /**
+   * Attempts to call the reducer to update the currently-highlighted option.
+   * If the currently-highlighted option is disabled, nothing will happen.
+   */
   const selectHighlightedOption = React.useCallback(() => {
     const option = visibleOptions[highlightedIdx]
     if (option) {
+      if (optionIsDisabled && optionIsDisabled(option, highlightedIdx)) {
+        return
+      }
+
       setSelectedOption(option)
     }
-  }, [highlightedIdx, setSelectedOption, visibleOptions])
+  }, [highlightedIdx, optionIsDisabled, setSelectedOption, visibleOptions])
 
   // ============================================================
   //  Keyboard handlers
