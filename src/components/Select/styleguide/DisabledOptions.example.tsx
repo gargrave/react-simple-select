@@ -7,7 +7,7 @@ import {
   options,
 } from './SelectStyleguide.helpers'
 
-const optionIsDisabled = (_option, idx) => idx % 3 === 0
+const optionIsDisabled = (_option, idx) => idx > 0 && (idx + 1) % 3 === 0
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const Example = () => {

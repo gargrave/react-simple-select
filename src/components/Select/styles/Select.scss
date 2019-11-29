@@ -105,11 +105,9 @@ input#{makeClassName('__selectInput')} {
   }
 
   @include disabled {
-    //background: $bg__disabled;
-    //color: $textColor__disabled;
-    background: pink;
-    color: darkorchid;
+    color: $textColor__disabledOption;
     cursor: default;
+    text-decoration: line-through;
   }
 }
 

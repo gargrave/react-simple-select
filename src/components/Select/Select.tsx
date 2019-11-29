@@ -460,10 +460,9 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
               visibleOptions.map((option, idx) => {
                 const key = getOptionKey ? getOptionKey(option) : idx
 
-                const isSelectedOption =
+                const isHighlighted = idx === highlightedIdx
+                const isSelected =
                   getOptionValue(option) === getOptionValue(value)
-
-                const isHighlightedOption = idx === highlightedIdx
                 const isDisabled = optionIsDisabled
                   ? optionIsDisabled(option, idx)
                   : false
@@ -471,8 +470,8 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
                 return (
                   <div
                     className={classNames(styles.option, {
-                      [styles.highlighted]: isHighlightedOption,
-                      [styles.selected]: isSelectedOption,
+                      [styles.highlighted]: isHighlighted,
+                      [styles.selected]: isSelected,
                       [styles.disabled]: isDisabled,
                     })}
                     key={key}

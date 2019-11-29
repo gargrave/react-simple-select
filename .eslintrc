@@ -106,6 +106,12 @@
       "rules": {
         "@typescript-eslint/no-var-requires": "off"
       }
+    },
+    {
+      "files": ["*.example.tsx"],
+      "rules": {
+        "react/no-unescaped-entities": "off"
+      }
     }
   ]
 }
