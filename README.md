@@ -30,7 +30,6 @@ me (i.e. I cannot guarantee any level of support).
 These are few items on my current road map, although I don't have any specific ETA:
 
 - [ ] Groupable options
-- [ ] Disabled options
 - [ ] Editable options (i.e. type to add a new option)
 - [ ] Multi-select
 - [ ] Accessibility
@@ -38,11 +37,4 @@ These are few items on my current road map, although I don't have any specific E
 ## Docs
 
 Right now (and for the foreseeable future), the docs are just my Styleguidist build.
-[Click here to view the docs](https://gargrave.github.io/react-simple-select). little touching up before they will be very useful, but that is on my short list.
-
-### Release Steps
-
-- Merge feature branch into `master`
-- Run `yarn release` to start the upgrade/build/release process
-  - This will use `np` to handle bumping version number, tagging, releasing to npm, etc.
-- Run `yarn styleguide:build` to rebuild the docs for the new version; commit and push
+[Click here to view the docs](https://gargrave.github.io/react-simple-select).
