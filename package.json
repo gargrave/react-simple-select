@@ -22,7 +22,7 @@
     "release": "yarn build && yarn np --yolo && yarn styleguide:build",
     "lint": "eslint --ext .ts,.tsx ./src",
     "test": "jest --watch",
-    "styleguide": "yarn build:examples && styleguidist server",
+    "styleguide": "styleguidist server",
     "styleguide:build": "yarn build:examples && styleguidist build"
   },
   "peerDependencies": {

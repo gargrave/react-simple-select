@@ -94,7 +94,12 @@ export type SelectProps = {
    * If you need to customize this behavior, you will want to specify custom parsers in the `getOption...` props.
    */
   options: any[]
-
+  /**
+   * **(Optional)** Callback for specifying if an option should be disabled. An option that is disabled
+   * will have additional styling applied to show it as disabled, and it will not be selectable.
+   *
+   * **Default:** `undefined` (i.e. all options will be enabled)
+   */
   optionIsDisabled?: (option: any, idx: number) => boolean
   /**
    * **(Optional)** Custom placeholder text to display when there is no selected value.
@@ -119,6 +124,16 @@ export type SelectProps = {
 
 /**
  * This is the primary component exported from react-simple-select.
+ *
+ * In case you're not familiar with Styleguidist, here a couple of things you can do:
+ *
+ * - Clicking on the `Props & Methods` button directly below this text will show you full
+ *    docs on all of the props this component can take. (I have done my best to document
+ *    them as clearly as possible.)
+ * - Clicking on the `View Code` button beneath any example will expand an interactive
+ *    code editor which not only shows you the code for the example, but also allows you
+ *    to edit it inline, which will hot reload said example. This is a good way to quickly
+ *    experience with different props and settings.
  *
  * @visibleName Select
  */

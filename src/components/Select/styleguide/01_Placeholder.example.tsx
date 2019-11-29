@@ -19,8 +19,8 @@ const Example = () => {
     <>
       <h2>Custom placeholder</h2>
       <p className="description">
-        The `placeholder` prop will allow you to specify custom placeholder text
-        when there is no current value.
+        The <span className="code">placeholder</span> prop will allow you to
+        specify custom placeholder text when there is no current value.
       </p>
 
       <Select

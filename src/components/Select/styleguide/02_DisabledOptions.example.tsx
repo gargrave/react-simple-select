@@ -7,10 +7,10 @@ import {
   options,
 } from './SelectStyleguide.helpers'
 
-const optionIsDisabled = (_option, idx) => idx > 0 && (idx + 1) % 3 === 0
+const optionIsDisabled = (option, _idx) => option.firstName.match(/e/i)
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const Example = () => {
+const Example = () => {
   const [value, setValue] = React.useState(options[0])
 
   const handleChange = option => {
@@ -21,13 +21,15 @@ export const Example = () => {
     <>
       <h2>Disabled Options</h2>
       <p className="description">
-        When providing a callback for the `isOptionDisabled` prop, you can
-        specify the conditions under which an option should be disabled, which
-        means it will received "disabled" styling, and be un-selectable.
+        When providing a callback for the{' '}
+        <span className="code">optionIsDisabled</span> prop, you can specify the
+        conditions under which an option should be disabled, which means it will
+        received "disabled" styling, and be un-selectable.
       </p>
 
       <p className="description">
-        For illustration's sake, this example disables every 3rd option.
+        For illustration's sake, this example disables all options (i.e. users)
+        who have the letter "e" in their first name.
       </p>
 
       <Select
