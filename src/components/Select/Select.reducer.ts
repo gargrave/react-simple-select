@@ -19,6 +19,8 @@ export enum SelectActionType {
   openMenu,
   closeMenu,
   setHighlighted,
+  asyncSearchStart,
+  asyncSearchEnd,
 }
 
 export type SelectReducerAction = {
@@ -26,6 +28,7 @@ export type SelectReducerAction = {
     highlightIdx?: number
     highlightIncrement?: number
     inputValue?: string
+    options?: any[]
   }
   props: SelectProps
   type: SelectActionType
@@ -36,6 +39,7 @@ export type SelectState = {
   highlightedIdx: number
   inputValue: string
   menuIsOpen: boolean
+  searching: boolean
   visibleOptions: any[]
 }
 
@@ -44,6 +48,7 @@ export const initialSelectState = (options: any[] = []): SelectState => ({
   highlightedIdx: 0,
   inputValue: '',
   menuIsOpen: false,
+  searching: false,
   visibleOptions: options,
 })
 
@@ -120,6 +125,28 @@ export const reducer = (
       return {
         ...state,
         highlightedIdx,
+      }
+    }
+
+    case SelectActionType.asyncSearchStart: {
+      const inputValue = action.payload?.inputValue ?? ''
+
+      return {
+        ...state,
+        inputValue,
+        menuIsOpen: true,
+        searching: true,
+        visibleOptions: [],
+      }
+    }
+
+    case SelectActionType.asyncSearchEnd: {
+      const options = action.payload?.options || []
+
+      return {
+        ...state,
+        searching: false,
+        visibleOptions: options,
       }
     }
 

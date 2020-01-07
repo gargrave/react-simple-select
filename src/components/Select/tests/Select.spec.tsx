@@ -6,17 +6,17 @@ import {
   DEFAULT_NO_OPTIONS_MESSAGE,
   DEFAULT_PLACEHOLDER,
   TEST_ID_CLEAR_ICON,
-} from './Select.helpers'
+} from '../Select.helpers'
 import {
   css,
   getUserFullName,
   getUserIdString,
   usersOptions as options,
-} from './tests/testUtils'
+} from './testUtils'
 
-import { Select, SelectProps } from './Select'
+import { Select, SelectProps } from '../Select'
 
-import * as reducerImports from './Select.reducer' // import all for mocking
+import * as reducerImports from '../Select.reducer' // import all for mocking
 const { SelectActionType } = reducerImports
 
 describe('Select', () => {
@@ -157,40 +157,6 @@ describe('Select', () => {
       )
 
       expect(getByText(placeholder)).toBeInTheDocument()
-    })
-  })
-
-  describe('Text Input', () => {
-    it('shows the "current value" container when there is no search text', () => {
-      const { container } = render(<Select {...defaultProps} />)
-
-      const classString = css(['__currentValue', '__hidden'])
-      expect(container.querySelectorAll(classString)).toHaveLength(0)
-    })
-
-    it('hides the "current value" container when there is search text', () => {
-      const { container } = render(<Select {...defaultProps} />)
-      const inputEl = container.querySelector('input') as HTMLElement
-
-      const classString = css(['__currentValue', '__hidden'])
-      const q = query => container.querySelectorAll(query)
-      expect(q(classString)).toHaveLength(0)
-      fireEvent.change(inputEl, { target: { value: 'show me the thing' } })
-      expect(q(classString)).toHaveLength(1)
-    })
-
-    it('clears any existing search text on outside click', () => {
-      const { container } = render(<Select {...defaultProps} />)
-      const inputEl = container.querySelector('input') as HTMLElement
-
-      const classString = css(['__currentValue', '__hidden'])
-      const q = query => container.querySelectorAll(query)
-      expect(q(classString)).toHaveLength(0)
-      fireEvent.change(inputEl, { target: { value: 'show me the thing' } })
-      expect(q(classString)).toHaveLength(1)
-
-      fireEvent.mouseDown(container)
-      expect(q(classString)).toHaveLength(0)
     })
   })
 

@@ -21,6 +21,11 @@ let nextId = 0
 
 export type SelectProps = {
   /**
+   * (Optional) Callback to provide async search capabilities.
+   * @param searchString
+   */
+  asyncSearch?: (searchString: string) => Promise<any> // TODO: type this correctly
+  /**
    * **(Optional)** Whether a "clear" button should be rendered, allowing the user to clear any current selection.
    *
    * **Default:** `true`
@@ -139,6 +144,7 @@ export type SelectProps = {
  */
 export const Select: React.FC<SelectProps> = React.memo(props => {
   const {
+    asyncSearch,
     clearable = true,
     disabled = false,
     getOptionKey = DEFAULT_GET_OPTION_KEY,
@@ -306,12 +312,32 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     [blur, menuIsOpen, selectHighlightedOption, visibleOptions],
   )
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      payload: { inputValue: event.target.value },
-      props,
-      type: SelectActionType.inputChange,
-    })
+  const handleInputChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { value: inputValue } = event?.target
+
+    if (asyncSearch) {
+      dispatch({
+        payload: { inputValue },
+        props,
+        type: SelectActionType.asyncSearchStart,
+      })
+
+      const result = await asyncSearch(inputValue)
+
+      dispatch({
+        payload: { options: result },
+        props,
+        type: SelectActionType.asyncSearchEnd,
+      })
+    } else {
+      dispatch({
+        payload: { inputValue },
+        props,
+        type: SelectActionType.inputChange,
+      })
+    }
   }
 
   // callback for handling clicks within the parent element

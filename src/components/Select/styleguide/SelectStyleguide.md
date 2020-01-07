@@ -176,3 +176,8 @@ const Example = () => {
 
 ;<Example />
 ```
+
+```jsx
+import { Example } from './AsyncSearch.example'
+;<Example />
+```

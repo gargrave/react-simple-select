@@ -24,6 +24,12 @@ export const usersOptions: User[] = [
   { firstName: 'Davie', id: nanoid(), lastName: 'McBavie' },
 ]
 
+export const searchResultUserOptions: User[] = [
+  { firstName: 'Search', id: nanoid(), lastName: 'Result 1' },
+  { firstName: 'Search', id: nanoid(), lastName: 'Result 2' },
+  { firstName: 'Search', id: nanoid(), lastName: 'Result 3' },
+]
+
 export const getUserIdString = (user: User) => `${user?.id}`
 export const getUserFullName = (user: User) =>
   `${user.firstName} ${user.lastName}`

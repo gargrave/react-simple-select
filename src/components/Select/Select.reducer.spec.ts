@@ -20,6 +20,7 @@ describe('Select Reducer', () => {
         highlightedIdx: 0,
         inputValue: '',
         menuIsOpen: false,
+        searching: false,
         visibleOptions: [],
       })
     })
@@ -33,6 +34,7 @@ describe('Select Reducer', () => {
         highlightedIdx: 0,
         inputValue: '',
         menuIsOpen: false,
+        searching: false,
         visibleOptions: options,
       })
     })
@@ -60,6 +62,7 @@ describe('Select Reducer', () => {
     beforeEach(() => {
       const visibleOptions = ['a', 'b', 'c']
       state = {
+        ...initialSelectState(),
         active: true,
         highlightedIdx: 1,
         inputValue: 'oh hai',
@@ -101,6 +104,7 @@ describe('Select Reducer', () => {
 
     beforeEach(() => {
       state = {
+        ...initialSelectState(),
         active: true,
         highlightedIdx: 1,
         inputValue: '',
@@ -289,6 +293,52 @@ describe('Select Reducer', () => {
       expect(result).toEqual({
         ...state,
         highlightedIdx: options.length - 1,
+      })
+    })
+  })
+
+  describe('Async searching', () => {
+    const inputValue = 'hello'
+    const searchStartState: SelectState = {
+      ...initialSelectState(),
+      inputValue,
+      menuIsOpen: true,
+      searching: true,
+      visibleOptions: [],
+    }
+
+    beforeEach(() => {
+      state = initialSelectState()
+    })
+
+    describe('asyncSearchStart', () => {
+      it('enables "searching" state', () => {
+        const action: SelectReducerAction = {
+          payload: { inputValue },
+          props: {} as any,
+          type: SelectActionType.asyncSearchStart,
+        }
+        const result = reducer(state, action)
+
+        expect(result).toEqual(searchStartState)
+      })
+    })
+
+    describe('asyncSearchEnd', () => {
+      it('removes "searching" state and uses the new options', () => {
+        const options = ['x', 'y', 'z']
+        const action: SelectReducerAction = {
+          payload: { options },
+          props: {} as any,
+          type: SelectActionType.asyncSearchEnd,
+        }
+        const result = reducer(searchStartState, action)
+
+        expect(result).toEqual({
+          ...searchStartState,
+          searching: false,
+          visibleOptions: options,
+        })
       })
     })
   })
