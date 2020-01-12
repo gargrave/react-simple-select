@@ -2,11 +2,13 @@
 import * as React from 'react'
 
 import { useHotkeys, useOutsideClick } from '../../hooks'
-import { classNames, Keys } from '../../utils'
+import { classNames, debounce, Keys } from '../../utils'
 import { SvgWrapper } from './components'
 import { ClearX, DownArrowSVG } from './svg'
 
 import {
+  DEFAULT_ASYNC_SEARCH_DEBOUNCE,
+  DEFAULT_ASYNC_SEARCHING_TEXT,
   DEFAULT_GET_OPTION_KEY,
   DEFAULT_GET_OPTION_LABEL,
   DEFAULT_GET_OPTION_VALUE,
@@ -22,9 +24,13 @@ let nextId = 0
 export type SelectProps = {
   /**
    * (Optional) Callback to provide async search capabilities.
-   * @param searchString
    */
   asyncSearch?: (searchString: string) => Promise<any> // TODO: type this correctly
+  /**
+   * (Optional) Text to display in the menu when an async search call is pending
+   * **Default:** "Searching..."
+   */
+  asyncSearchingText?: string
   /**
    * **(Optional)** Whether a "clear" button should be rendered, allowing the user to clear any current selection.
    *
@@ -145,6 +151,7 @@ export type SelectProps = {
 export const Select: React.FC<SelectProps> = React.memo(props => {
   const {
     asyncSearch,
+    asyncSearchingText = DEFAULT_ASYNC_SEARCHING_TEXT,
     clearable = true,
     disabled = false,
     getOptionKey = DEFAULT_GET_OPTION_KEY,
@@ -169,6 +176,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     highlightedIdx,
     inputValue,
     menuIsOpen,
+    searching,
     visibleOptions,
   } = state
 
@@ -221,6 +229,20 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     dispatch({ props, type: SelectActionType.blur })
     blurInputElement()
   }, [props])
+
+  const debouncedAsyncSearch = asyncSearch
+    ? React.useCallback(
+        debounce(async (searchString: string) => {
+          const result = await asyncSearch(searchString)
+          dispatch({
+            payload: { options: result },
+            props,
+            type: SelectActionType.asyncSearchEnd,
+          })
+        }, DEFAULT_ASYNC_SEARCH_DEBOUNCE),
+        [asyncSearch, props],
+      )
+    : () => void 0
 
   // ============================================================
   //  Highlight/selection management
@@ -317,20 +339,14 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   ) => {
     const { value: inputValue } = event?.target
 
-    if (asyncSearch) {
+    if (asyncSearch && inputValue) {
       dispatch({
         payload: { inputValue },
         props,
         type: SelectActionType.asyncSearchStart,
       })
 
-      const result = await asyncSearch(inputValue)
-
-      dispatch({
-        payload: { options: result },
-        props,
-        type: SelectActionType.asyncSearchEnd,
-      })
+      debouncedAsyncSearch(inputValue)
     } else {
       dispatch({
         payload: { inputValue },
@@ -534,7 +550,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
               <div
                 className={classNames(styles.option, styles.noOptionsMessage)}
               >
-                {noOptionsMessage}
+                {searching ? asyncSearchingText : noOptionsMessage}
               </div>
             )}
           </div>

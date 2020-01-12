@@ -29,7 +29,6 @@ export const Example = () => {
   return (
     <>
       <h2>Async Searching</h2>
-
       <Select
         asyncSearch={userSearch}
         getOptionKey={getOptionKey}
@@ -37,6 +36,7 @@ export const Example = () => {
         onChange={setValue}
         options={options}
         placeholder="Type to search..."
+        value={value}
       />
     </>
   )

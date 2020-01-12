@@ -127,6 +127,7 @@ describe('Select Reducer', () => {
         ...state,
         highlightedIdx: 0,
         inputValue,
+        searching: false,
         visibleOptions,
       })
     })
@@ -162,6 +163,7 @@ describe('Select Reducer', () => {
         active: true,
         highlightedIdx: 0,
         menuIsOpen: true,
+        searching: false,
       })
     })
   })
@@ -339,6 +341,22 @@ describe('Select Reducer', () => {
           searching: false,
           visibleOptions: options,
         })
+      })
+
+      it('does nothing is "search" is already false', () => {
+        const state = {
+          ...searchStartState,
+          searching: false,
+        }
+        const options = ['x', 'y', 'z']
+        const action: SelectReducerAction = {
+          payload: { options },
+          props: {} as any,
+          type: SelectActionType.asyncSearchEnd,
+        }
+        const result = reducer(state, action)
+
+        expect(result).toEqual(state)
       })
     })
   })

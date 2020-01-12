@@ -2,7 +2,12 @@ import * as React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { cleanup, fireEvent, render, wait } from '@testing-library/react'
 
-import { DEFAULT_PLACEHOLDER } from '../Select.helpers'
+import {
+  DEFAULT_ASYNC_SEARCH_DEBOUNCE,
+  DEFAULT_ASYNC_SEARCHING_TEXT,
+  DEFAULT_NO_OPTIONS_MESSAGE,
+  DEFAULT_PLACEHOLDER,
+} from '../Select.helpers'
 import {
   css,
   getUserFullName,
@@ -31,9 +36,8 @@ describe('Select :: Search', () => {
       getOptionLabel: jest.fn(getUserFullName),
       getOptionValue: jest.fn(getUserIdString),
       label: undefined,
-      noOptionsMessage: undefined,
       onChange: jest.fn(),
-      options: ['a', 'b', 'c'],
+      options,
       placeholder: DEFAULT_PLACEHOLDER,
       value: options[0],
     }
@@ -76,11 +80,12 @@ describe('Select :: Search', () => {
   })
 
   describe('Async search', () => {
-    it.only('performs async searching when the prop is present', async () => {
-      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
-      const searchInput = 'searchString'
-      const testTimeout = 1000
+    const searchInput = 'searchString'
 
+    it('performs async searching when the prop is present', async () => {
+      const reducerSpy = jest.spyOn(reducerImports, 'reducer')
+      const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
+      const testTimeout = 100
       const asyncSearch = jest.fn(() => {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -89,40 +94,63 @@ describe('Select :: Search', () => {
         })
       })
 
-      const { container, getByText } = render(
+      const { container, getAllByText, queryAllByText } = render(
         <Select {...defaultProps} asyncSearch={asyncSearch} />,
       )
-      const q = query => container.querySelectorAll(query)
 
       // just to be sure we get the menu open correctly...
-      const containerEl = container.querySelector(
-        css('__container'),
-      ) as HTMLElement
-      fireEvent.mouseDown(containerEl)
-      expect(q(css('__optionsWrapper'))).toHaveLength(1)
-
-      // TODO: displays default options before a search is performed
+      const containerEl = container.querySelector(css('__container'))
+      fireEvent.mouseDown(containerEl as HTMLElement)
+      const optionsWrapper = container.querySelectorAll(css('__optionsWrapper'))
+      expect(optionsWrapper).toHaveLength(1)
 
       let currentReducerCalls = reducerSpy.mock.calls.length
-      expect(asyncSearch).toHaveBeenCalledTimes(0)
-
       const inputEl = container.querySelector('input') as HTMLElement
-      fireEvent.change(inputEl, { target: { value: searchInput } })
 
-      // "async search start" action gets dispatched first
+      // trigger a search, but not advance timers enough for debounce to occur
+      // ensure that the "search start" dispatch occurs, but NOT the actual search
+      fireEvent.change(inputEl, { target: { value: 'no' } })
+      jest.advanceTimersByTime(debounceTimeout - 1)
       let lastReducerCall = reducerSpy.mock.calls[currentReducerCalls]
       let lastDispatchedAction = lastReducerCall[1]
       expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
       expect(lastDispatchedAction.type).toBe(SelectActionType.asyncSearchStart)
-      expect(lastDispatchedAction.payload).toEqual({
-        inputValue: searchInput,
-      })
+      expect(lastDispatchedAction.payload).toEqual({ inputValue: 'no' })
+      expect(asyncSearch).toHaveBeenCalledTimes(0)
       currentReducerCalls = reducerSpy.mock.calls.length
 
+      // do the same thing again, just to ensure that multiple "short searches" will not trigger the search
+      fireEvent.change(inputEl, { target: { value: 'still_no' } })
+      jest.advanceTimersByTime(debounceTimeout - 1)
+      lastReducerCall = reducerSpy.mock.calls[currentReducerCalls]
+      lastDispatchedAction = lastReducerCall[1]
+      expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
+      expect(lastDispatchedAction.type).toBe(SelectActionType.asyncSearchStart)
+      expect(lastDispatchedAction.payload).toEqual({ inputValue: 'still_no' })
+      expect(asyncSearch).toHaveBeenCalledTimes(0)
+      currentReducerCalls = reducerSpy.mock.calls.length
+
+      // now do the search again, but this time advance enough for the debounce happen,
+      // and ensure the search is handled as expected
+      fireEvent.change(inputEl, { target: { value: searchInput } })
+      lastReducerCall = reducerSpy.mock.calls[currentReducerCalls]
+      lastDispatchedAction = lastReducerCall[1]
+      expect(reducerSpy).toHaveBeenCalledTimes(currentReducerCalls + 1)
+      expect(lastDispatchedAction.type).toBe(SelectActionType.asyncSearchStart)
+      expect(lastDispatchedAction.payload).toEqual({ inputValue: searchInput })
+      expect(asyncSearch).toHaveBeenCalledTimes(0)
+      currentReducerCalls = reducerSpy.mock.calls.length
+
+      expect(queryAllByText(DEFAULT_NO_OPTIONS_MESSAGE)).toHaveLength(0)
+      expect(getAllByText(DEFAULT_ASYNC_SEARCHING_TEXT)).toHaveLength(1)
+      // TODO: shows loading icon when the search is occurring
+
       // asyncSearch callback is triggered with the current value
+      jest.advanceTimersByTime(debounceTimeout)
       expect(asyncSearch).toHaveBeenCalledTimes(1)
       expect(asyncSearch).toHaveBeenCalledWith(searchInput)
 
+      // now wait for our mock "API Search" and ensure we handle the results correctly
       await wait(() => {
         jest.advanceTimersByTime(testTimeout)
       })
@@ -136,15 +164,60 @@ describe('Select :: Search', () => {
         options: searchResultUserOptions,
       })
 
-      // TODO: shows loading state when the search is occurring
-      // TODO: hides loading state when search completes
-
       // uses the returned user set for the options
       searchResultUserOptions.forEach(result => {
-        expect(getByText(getUserFullName(result))).toBeInTheDocument()
+        expect(getAllByText(getUserFullName(result))).toHaveLength(1)
       })
+      // hides loading state when search completes
+      expect(queryAllByText(DEFAULT_ASYNC_SEARCHING_TEXT)).toHaveLength(0)
     })
 
-    it.todo('debounces async search calls by the specified amount')
+    it('resets options and ignore any pending debounced searches if search is empty', async () => {
+      const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
+      const testTimeout = 100
+      const asyncSearch = jest.fn(() => {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(searchResultUserOptions)
+          }, testTimeout)
+        })
+      })
+
+      const { container, getAllByText } = render(
+        <Select {...defaultProps} asyncSearch={asyncSearch} />,
+      )
+
+      // just to be sure we get the menu open correctly...
+      const containerEl = container.querySelector(css('__container'))
+      fireEvent.mouseDown(containerEl as HTMLElement)
+      const optionsWrapper = container.querySelectorAll(css('__optionsWrapper'))
+      expect(optionsWrapper).toHaveLength(1)
+
+      const inputEl = container.querySelector('input') as HTMLElement
+
+      // trigger a search, but not advance timers enough for debounce to occur
+      // ensure that the "search start" dispatch occurs, but NOT the actual search
+      fireEvent.change(inputEl, { target: { value: 'hi' } })
+      jest.advanceTimersByTime(debounceTimeout)
+      await wait(() => {
+        jest.advanceTimersByTime(testTimeout)
+      })
+
+      // confirm that we have our mock search results
+      searchResultUserOptions.forEach(result => {
+        expect(getAllByText(getUserFullName(result))).toHaveLength(1)
+      })
+
+      fireEvent.change(inputEl, { target: { value: '' } })
+      jest.advanceTimersByTime(debounceTimeout)
+      await wait(() => {
+        jest.advanceTimersByTime(testTimeout)
+      })
+
+      // all default options are back in the list
+      options.forEach(result => {
+        expect(getAllByText(getUserFullName(result)).length).toBeGreaterThan(0)
+      })
+    })
   })
 })

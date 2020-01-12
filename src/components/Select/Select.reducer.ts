@@ -86,6 +86,7 @@ export const reducer = (
         highlightedIdx: 0,
         inputValue: value,
         menuIsOpen: true,
+        searching: false,
         visibleOptions,
       }
     }
@@ -129,11 +130,11 @@ export const reducer = (
     }
 
     case SelectActionType.asyncSearchStart: {
-      const inputValue = action.payload?.inputValue ?? ''
+      const newInputValue = action.payload?.inputValue ?? ''
 
       return {
         ...state,
-        inputValue,
+        inputValue: newInputValue,
         menuIsOpen: true,
         searching: true,
         visibleOptions: [],
@@ -141,12 +142,14 @@ export const reducer = (
     }
 
     case SelectActionType.asyncSearchEnd: {
-      const options = action.payload?.options || []
+      if (!state.searching) return state
+
+      const newOptions = action.payload?.options || []
 
       return {
         ...state,
         searching: false,
-        visibleOptions: options,
+        visibleOptions: newOptions,
       }
     }
 
