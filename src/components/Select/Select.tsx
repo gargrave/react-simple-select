@@ -27,6 +27,16 @@ export type SelectProps = {
    */
   asyncSearch?: (searchString: string) => Promise<any> // TODO: type this correctly
   /**
+   * (Optional) Override setting for the debounce time (in ms) that will occur before
+   * an async search is triggered.
+   *
+   * This is useful for preventing triggering multiple instantaneous searching,
+   * and thus give your users time to type before triggering the search.
+   *
+   * **Default:** 500
+   */
+  asyncSearchDebounceTime?: number
+  /**
    * (Optional) Text to display in the menu when an async search call is pending
    * **Default:** "Searching..."
    */
@@ -151,6 +161,7 @@ export type SelectProps = {
 export const Select: React.FC<SelectProps> = React.memo(props => {
   const {
     asyncSearch,
+    asyncSearchDebounceTime = DEFAULT_ASYNC_SEARCH_DEBOUNCE,
     asyncSearchingText = DEFAULT_ASYNC_SEARCHING_TEXT,
     clearable = true,
     disabled = false,
@@ -239,7 +250,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             props,
             type: SelectActionType.asyncSearchEnd,
           })
-        }, DEFAULT_ASYNC_SEARCH_DEBOUNCE),
+        }, asyncSearchDebounceTime),
         [asyncSearch, props],
       )
     : () => void 0

@@ -80,9 +80,8 @@ describe('Select :: Search', () => {
   })
 
   describe('Async search', () => {
-    const searchInput = 'searchString'
-
     it('performs async searching when the prop is present', async () => {
+      const searchInput = 'searchString'
       const reducerSpy = jest.spyOn(reducerImports, 'reducer')
       const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
       const testTimeout = 100
@@ -170,6 +169,50 @@ describe('Select :: Search', () => {
       })
       // hides loading state when search completes
       expect(queryAllByText(DEFAULT_ASYNC_SEARCHING_TEXT)).toHaveLength(0)
+    })
+
+    it('uses a custom debounce time when the prop is specified', async () => {
+      const debounceTimeout = 47
+      const testTimeout = 100
+      const asyncSearch = jest.fn(() => {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(searchResultUserOptions)
+          }, testTimeout)
+        })
+      })
+
+      const { container, getAllByText } = render(
+        <Select
+          {...defaultProps}
+          asyncSearch={asyncSearch}
+          asyncSearchDebounceTime={debounceTimeout}
+        />,
+      )
+
+      // just to be sure we get the menu open correctly...
+      const containerEl = container.querySelector(css('__container'))
+      fireEvent.mouseDown(containerEl as HTMLElement)
+      const optionsWrapper = container.querySelectorAll(css('__optionsWrapper'))
+      expect(optionsWrapper).toHaveLength(1)
+
+      const inputEl = container.querySelector('input') as HTMLElement
+      fireEvent.change(inputEl, { target: { value: 'hey there' } })
+      jest.advanceTimersByTime(debounceTimeout - 1)
+      expect(asyncSearch).toHaveBeenCalledTimes(0)
+      jest.advanceTimersByTime(1)
+      expect(asyncSearch).toHaveBeenCalledTimes(1)
+      expect(asyncSearch).toHaveBeenCalledWith('hey there')
+
+      // now wait for our mock "API Search" and ensure we handle the results correctly
+      await wait(() => {
+        jest.advanceTimersByTime(testTimeout)
+      })
+
+      // uses the returned user set for the options
+      searchResultUserOptions.forEach(result => {
+        expect(getAllByText(getUserFullName(result))).toHaveLength(1)
+      })
     })
 
     it('resets options and ignore any pending debounced searches if search is empty', async () => {

@@ -29,8 +29,25 @@ export const Example = () => {
   return (
     <>
       <h2>Async Searching</h2>
+      <p className="description">
+        If you need to load and/or search for options asynchronously, you can do
+        so with the async searching options. Provide an{' '}
+        <span className="code">asyncSearch</span> implementation, which takes a
+        string (the current search string) and resolves a Promise with a new set
+        of options.
+      </p>
+      <p className="description">
+        The search has a debounce timer attached to it, so you can specify the
+        length of the delay that will occur before the search is actually
+        triggered (in general, you don't want to fire searches immediately, but
+        rather give your users time to search and rest before sending the search
+        request).
+      </p>
+
       <Select
         asyncSearch={userSearch}
+        asyncSearchDebounceTime={350}
+        asyncSearchingText="Doing a most excellent search..."
         getOptionKey={getOptionKey}
         getOptionLabel={getOptionLabel}
         onChange={setValue}
