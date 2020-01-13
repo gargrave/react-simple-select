@@ -1,4 +1,4 @@
-$baseName: 'reactSimpleSelect';
+@import './_variables';
 
 @function makeClassName($name) {
   @return '.#{$baseName}#{$name}';

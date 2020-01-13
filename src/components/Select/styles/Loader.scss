@@ -1,0 +1,81 @@
+@import './_helpers';
+@import './_variables';
+
+$itemSize: 4px;
+$itemColor: #aaa;
+$itemSpacer: 2px;
+
+$increment: $itemSize + $itemSpacer;
+$speed: 0.4s;
+
+@include style('__loaderWrapper') {
+  height: $itemSize;
+  margin-right: 4px;
+  width: $increment * 3;
+}
+
+@include style('__loader') {
+  height: 100%;
+  position: relative;
+  width: 100%;
+
+  @include style('__loaderItem') {
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    background: $itemColor;
+    border-radius: 50%;
+    height: $itemSize;
+    position: absolute;
+    top: 0;
+    width: $itemSize;
+
+    &:nth-child(1) {
+      animation: #{$baseName}__loader1 $speed infinite;
+      left: 0;
+    }
+
+    &:nth-child(2) {
+      animation: #{$baseName}__loader2 $speed infinite;
+      left: 0;
+    }
+
+    &:nth-child(3) {
+      animation: #{$baseName}__loader2 $speed infinite;
+      left: $increment;
+    }
+
+    &:nth-child(4) {
+      animation: #{$baseName}__loader3 $speed infinite;
+      left: $increment * 2;
+    }
+  }
+}
+
+@keyframes #{$baseName}__loader1 {
+  0% {
+    transform: scale(0);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes #{$baseName}__loader3 {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes #{$baseName}__loader2 {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate($increment, 0);
+  }
+}

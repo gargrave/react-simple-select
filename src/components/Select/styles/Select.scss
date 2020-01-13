@@ -1,6 +1,8 @@
 @import './_helpers';
 @import './_variables';
 
+@import './Loader';
+
 @include style('__container') {
   background: $bg__default;
   color: $textColor__default;

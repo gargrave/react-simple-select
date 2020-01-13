@@ -106,6 +106,8 @@ describe('Select :: Search', () => {
       let currentReducerCalls = reducerSpy.mock.calls.length
       const inputEl = container.querySelector('input') as HTMLElement
 
+      // no loader should be showing yet
+      expect(container.querySelectorAll(css('__loader'))).toHaveLength(0)
       // trigger a search, but not advance timers enough for debounce to occur
       // ensure that the "search start" dispatch occurs, but NOT the actual search
       fireEvent.change(inputEl, { target: { value: 'no' } })
@@ -142,7 +144,7 @@ describe('Select :: Search', () => {
 
       expect(queryAllByText(DEFAULT_NO_OPTIONS_MESSAGE)).toHaveLength(0)
       expect(getAllByText(DEFAULT_ASYNC_SEARCHING_TEXT)).toHaveLength(1)
-      // TODO: shows loading icon when the search is occurring
+      expect(container.querySelectorAll(css('__loader'))).toHaveLength(1)
 
       // asyncSearch callback is triggered with the current value
       jest.advanceTimersByTime(debounceTimeout)
@@ -169,6 +171,7 @@ describe('Select :: Search', () => {
       })
       // hides loading state when search completes
       expect(queryAllByText(DEFAULT_ASYNC_SEARCHING_TEXT)).toHaveLength(0)
+      expect(container.querySelectorAll(css('__loader'))).toHaveLength(0)
     })
 
     it('uses a custom debounce time when the prop is specified', async () => {

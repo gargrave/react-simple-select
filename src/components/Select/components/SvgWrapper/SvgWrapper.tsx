@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import { classNames } from '../../../utils'
-import { styles } from '../Select.helpers'
+import { classNames } from '../../../../utils'
+import { styles } from '../../Select.helpers'
 
 export type SvgWrapperProps = {
   children: React.ReactNode

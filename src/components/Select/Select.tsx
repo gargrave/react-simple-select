@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { useHotkeys, useOutsideClick } from '../../hooks'
 import { classNames, debounce, Keys } from '../../utils'
-import { SvgWrapper } from './components'
+import { Loader, SvgWrapper } from './components'
 import { ClearX, DownArrowSVG } from './svg'
 
 import {
@@ -506,6 +506,8 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             type="text"
             value={inputValue}
           />
+
+          {searching && <Loader />}
 
           {shouldRenderClearIcon && (
             <SvgWrapper
