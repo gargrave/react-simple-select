@@ -2,6 +2,7 @@
 @import './_variables';
 
 @import './Loader';
+@import './SvgWrapper';
 
 @include style('__container') {
   background: $bg__default;
@@ -110,18 +111,5 @@ input#{makeClassName('__selectInput')} {
     color: $textColor__disabledOption;
     cursor: default;
     text-decoration: line-through;
-  }
-}
-
-@include style('__svgWrapper') {
-  line-height: 0;
-
-  svg {
-    fill: $clickableIcon__idle;
-    transition: fill 0.15s ease;
-  }
-
-  &:hover svg {
-    fill: $clickableIcon__hover;
   }
 }

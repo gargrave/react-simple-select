@@ -1,0 +1,15 @@
+@import './_helpers';
+@import './_variables';
+
+@include style('__svgWrapper') {
+  line-height: 0;
+
+  svg {
+    fill: $clickableIcon__idle;
+    transition: fill 0.15s ease;
+  }
+
+  &:hover svg {
+    fill: $clickableIcon__hover;
+  }
+}
