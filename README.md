@@ -48,7 +48,6 @@ it for production projects). But there are a few reasons I wanted to build this:
 These are few items on my current road map, although I don't have any specific
 ETA:
 
-- [ ] Async searching/loading (in progress)
 - [ ] Customizable styling (in progress)
 - [ ] Accessibility additions (e.g. better ARIA handling for current lists)
 - [ ] Custom option rendering (e.g. render options as components instead of just
@@ -58,6 +57,7 @@ ETA:
 - [ ] Groupable options
 - [ ] Editable options (i.e. type to add a new option)
 - [ ] Multi-select
+- [x] Async searching/loading (in progress)
 
 ## Docs
 
