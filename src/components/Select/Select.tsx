@@ -21,11 +21,11 @@ import { initialSelectState, reducer, SelectActionType } from './Select.reducer'
 
 let nextId = 0
 
-export type SelectProps = {
+type AsyncSearchProps = {
   /**
    * (Optional) Callback to provide async search capabilities.
    */
-  asyncSearch?: (searchString: string) => Promise<any> // TODO: type this correctly
+  asyncSearch?: (searchString: string) => Promise<any>
   /**
    * (Optional) Override setting for the debounce time (in ms) that will occur before
    * an async search is triggered.
@@ -33,14 +33,25 @@ export type SelectProps = {
    * This is useful for preventing triggering multiple instantaneous searching,
    * and thus give your users time to type before triggering the search.
    *
-   * **Default:** 500
+   * **Default**: 500
    */
   asyncSearchDebounceTime?: number
   /**
+   * (Optional) Specify a minimum length requirement for a search string before
+   * the async search prop is triggered.
+   *
+   * **Default**: 1
+   */
+  asyncSearchMinLength?: number
+  /**
    * (Optional) Text to display in the menu when an async search call is pending
-   * **Default:** "Searching..."
+   *
+   * **Default**: "Searching..."
    */
   asyncSearchingText?: string
+}
+
+export type SelectProps = AsyncSearchProps & {
   /**
    * **(Optional)** Whether a "clear" button should be rendered, allowing the user to clear any current selection.
    *
@@ -162,6 +173,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   const {
     asyncSearch,
     asyncSearchDebounceTime = DEFAULT_ASYNC_SEARCH_DEBOUNCE,
+    asyncSearchMinLength = 1,
     asyncSearchingText = DEFAULT_ASYNC_SEARCHING_TEXT,
     clearable = true,
     disabled = false,
@@ -348,9 +360,9 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const { value: inputValue } = event?.target
+    const { value: inputValue = '' } = event?.target
 
-    if (asyncSearch && inputValue) {
+    if (asyncSearch && inputValue.length >= asyncSearchMinLength) {
       dispatch({
         payload: { inputValue },
         props,

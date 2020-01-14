@@ -218,7 +218,53 @@ describe('Select :: Search', () => {
       })
     })
 
-    it('resets options and ignore any pending debounced searches if search is empty', async () => {
+    it('does not trigger an async search if the string is too short', async () => {
+      const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
+      const testTimeout = 100
+      const asyncSearch = jest.fn(() => {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(searchResultUserOptions)
+          }, testTimeout)
+        })
+      })
+
+      const { container } = render(
+        <Select
+          {...defaultProps}
+          asyncSearch={asyncSearch}
+          asyncSearchMinLength={3}
+        />,
+      )
+      // just to be sure we get the menu open correctly...
+      const containerEl = container.querySelector(css('__container'))
+      fireEvent.mouseDown(containerEl as HTMLElement)
+      const optionsWrapper = container.querySelectorAll(css('__optionsWrapper'))
+      expect(optionsWrapper).toHaveLength(1)
+
+      const inputEl = container.querySelector('input') as HTMLElement
+
+      // searching with a string shorter than min length should not trigger search
+      fireEvent.change(inputEl, { target: { value: 'hi' } })
+      jest.advanceTimersByTime(debounceTimeout)
+      await wait(() => {
+        jest.advanceTimersByTime(testTimeout)
+      })
+      expect(asyncSearch).toHaveBeenCalledTimes(0)
+      expect(container.querySelectorAll(css('__loader'))).toHaveLength(0)
+
+      // now try again with a long enough string, and ensure it is called
+      fireEvent.change(inputEl, { target: { value: 'hey' } })
+      jest.advanceTimersByTime(debounceTimeout)
+      // loader should show, because this search is long enough
+      expect(container.querySelectorAll(css('__loader'))).toHaveLength(1)
+      await wait(() => {
+        jest.advanceTimersByTime(testTimeout)
+      })
+      expect(asyncSearch).toHaveBeenCalledTimes(1)
+    })
+
+    it('resets options and ignores any pending debounced searches if search is empty', async () => {
       const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
       const testTimeout = 100
       const asyncSearch = jest.fn(() => {
@@ -241,8 +287,6 @@ describe('Select :: Search', () => {
 
       const inputEl = container.querySelector('input') as HTMLElement
 
-      // trigger a search, but not advance timers enough for debounce to occur
-      // ensure that the "search start" dispatch occurs, but NOT the actual search
       fireEvent.change(inputEl, { target: { value: 'hi' } })
       jest.advanceTimersByTime(debounceTimeout)
       await wait(() => {

@@ -10,6 +10,10 @@ export const options = Array(10)
   .fill(0)
   .map(makePerson)
 
+export const searchableOptions = Array(50)
+  .fill(0)
+  .map(makePerson)
+
 export const getUserFullName = option =>
   `${option.firstName} ${option.lastName}`
 export const getOptionKey = option => `${option.id}`
