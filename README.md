@@ -57,7 +57,7 @@ ETA:
 - [ ] Groupable options
 - [ ] Editable options (i.e. type to add a new option)
 - [ ] Multi-select
-- [x] Async searching/loading (in progress)
+- [x] Async searching/loading
 
 ## Docs
 
