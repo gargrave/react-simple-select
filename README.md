@@ -9,7 +9,11 @@ I would definitely advise against using this in any production projects. I have
 pretty minimal time to work on it, and it's mostly just a fun side project for
 me (i.e. I cannot guarantee any level of support).
 
-[Click here to view the docs](https://gargrave.github.io/react-simple-select)
+## Docs & Playgrounds
+
+You can see some working examples and play around with it interactively at this [interactive CodeSandbox project](https://codesandbox.io/s/react-simple-select019-8x2xq).
+
+Alternately, you can view the hosted [Styleguidist project](https://gargrave.github.io/react-simple-select). This is more useful for dev purposes, and I would lean on the CodeSandbox link more for learning purposes, but this is here if it helps!
 
 ## Why?
 
@@ -58,9 +62,3 @@ ETA:
 - [ ] Editable options (i.e. type to add a new option)
 - [ ] Multi-select
 - [x] Async searching/loading
-
-## Docs
-
-Right now (and for the foreseeable future), the docs are just my Styleguidist
-build.
-[Click here to view the docs](https://gargrave.github.io/react-simple-select).
