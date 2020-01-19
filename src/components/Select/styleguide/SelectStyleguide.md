@@ -203,7 +203,7 @@ const userSearch = inputValue => {
   })
 }
 
-const rejectedUserSearch = inputValue => {
+const rejectedUserSearch = _inputValue => {
   return new Promise((_, reject) => {
     setTimeout(() => {
       reject(new Error('This search has failed.'))
@@ -229,9 +229,9 @@ const Example = () => {
       <p className="description">
         If an error occurs during the async search, the parent component should
         both reject the Promise and handle the error in whatever way is best for
-        your app. Internally, react-simple-select will simply the ignore the
-        error (assuming it has already been handled appropriately in the parent)
-        and show the "no options" message.
+        your app. Internally, react-simple-select will simply ignore the error
+        (assuming it has already been handled appropriately in the parent) and
+        show the "no options" message.
       </p>
       <p className="description">
         The search has a debounce timer attached to it, so you can specify the
