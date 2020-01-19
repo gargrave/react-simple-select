@@ -253,15 +253,28 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     blurInputElement()
   }, [props])
 
+  /**
+   * Debounced async search function
+   * Will attempt to trigger the async search prop when specified.
+   * Any errors caught here will be gracefully ignored, based on the assumption
+   * that the error is being properly handled in the parent component.
+   */
   const debouncedAsyncSearch = asyncSearch
     ? React.useCallback(
         debounce(async (searchString: string) => {
-          const result = await asyncSearch(searchString)
-          dispatch({
-            payload: { options: result },
-            props,
-            type: SelectActionType.asyncSearchEnd,
-          })
+          let newOptions: any[] = []
+
+          try {
+            newOptions = await asyncSearch(searchString)
+          } catch (err) {
+            // gracefully ignore any errors here;
+          } finally {
+            dispatch({
+              payload: { options: newOptions },
+              props,
+              type: SelectActionType.asyncSearchEnd,
+            })
+          }
         }, asyncSearchDebounceTime),
         [asyncSearch, props],
       )

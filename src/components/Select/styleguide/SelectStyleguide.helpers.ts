@@ -10,7 +10,7 @@ export const options = Array(10)
   .fill(0)
   .map(makePerson)
 
-export const searchableOptions = Array(50)
+export const searchableOptions = Array(100)
   .fill(0)
   .map(makePerson)
 

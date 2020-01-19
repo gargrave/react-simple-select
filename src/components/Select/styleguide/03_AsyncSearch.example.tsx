@@ -23,6 +23,14 @@ const userSearch = inputValue => {
   })
 }
 
+const rejectedUserSearch = _inputValue => {
+  return new Promise((_, reject) => {
+    setTimeout(() => {
+      reject(new Error('This search has failed.'))
+    }, 1000)
+  })
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Example = () => {
   const [value, setValue] = React.useState(options[1])
@@ -37,6 +45,13 @@ const Example = () => {
         <span className="code">asyncSearch</span> implementation, which takes a
         string (the current search string) and resolves a Promise with a new set
         of options.
+      </p>
+      <p className="description">
+        If an error occurs during the async search, the parent component should
+        both reject the Promise and handle the error in whatever way is best for
+        your app. Internally, react-simple-select will simply ignore the error
+        (assuming it has already been handled appropriately in the parent) and
+        show the "no options" message.
       </p>
       <p className="description">
         The search has a debounce timer attached to it, so you can specify the
@@ -85,6 +100,25 @@ const Example = () => {
         onChange={setValue2}
         options={[]}
         placeholder="Type to search..."
+        value={value2}
+      />
+
+      <p className="description">
+        This instance is hard-coded to reject its search, as an example of how
+        search errors are "silently ignored" by react-simple-select. If you need
+        specific error handling, it needs to be implemented in the parent
+        component.
+      </p>
+      <Select
+        asyncSearch={rejectedUserSearch}
+        asyncSearchDebounceTime={500}
+        asyncSearchMinLength={2}
+        asyncSearchingText="This is bound to fail..."
+        getOptionKey={getOptionKey}
+        getOptionLabel={getOptionLabel}
+        onChange={setValue2}
+        options={options}
+        placeholder="Type to trigger a failed search..."
         value={value2}
       />
     </>

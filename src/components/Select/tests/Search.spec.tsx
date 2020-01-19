@@ -80,11 +80,12 @@ describe('Select :: Search', () => {
   })
 
   describe('Async search', () => {
+    const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
+    const testTimeout = 100
+
     it('performs async searching when the prop is present', async () => {
       const searchInput = 'searchString'
       const reducerSpy = jest.spyOn(reducerImports, 'reducer')
-      const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
-      const testTimeout = 100
       const asyncSearch = jest.fn(() => {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -103,10 +104,9 @@ describe('Select :: Search', () => {
       const optionsWrapper = container.querySelectorAll(css('__optionsWrapper'))
       expect(optionsWrapper).toHaveLength(1)
 
+      // no loader should be showing yet
       let currentReducerCalls = reducerSpy.mock.calls.length
       const inputEl = container.querySelector('input') as HTMLElement
-
-      // no loader should be showing yet
       expect(container.querySelectorAll(css('__loader'))).toHaveLength(0)
       // trigger a search, but not advance timers enough for debounce to occur
       // ensure that the "search start" dispatch occurs, but NOT the actual search
@@ -175,8 +175,7 @@ describe('Select :: Search', () => {
     })
 
     it('uses a custom debounce time when the prop is specified', async () => {
-      const debounceTimeout = 47
-      const testTimeout = 100
+      const shortDebounceTimeout = 47
       const asyncSearch = jest.fn(() => {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -189,7 +188,7 @@ describe('Select :: Search', () => {
         <Select
           {...defaultProps}
           asyncSearch={asyncSearch}
-          asyncSearchDebounceTime={debounceTimeout}
+          asyncSearchDebounceTime={shortDebounceTimeout}
         />,
       )
 
@@ -201,7 +200,7 @@ describe('Select :: Search', () => {
 
       const inputEl = container.querySelector('input') as HTMLElement
       fireEvent.change(inputEl, { target: { value: 'hey there' } })
-      jest.advanceTimersByTime(debounceTimeout - 1)
+      jest.advanceTimersByTime(shortDebounceTimeout - 1)
       expect(asyncSearch).toHaveBeenCalledTimes(0)
       jest.advanceTimersByTime(1)
       expect(asyncSearch).toHaveBeenCalledTimes(1)
@@ -219,8 +218,6 @@ describe('Select :: Search', () => {
     })
 
     it('does not trigger an async search if the string is too short', async () => {
-      const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
-      const testTimeout = 100
       const asyncSearch = jest.fn(() => {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -242,9 +239,8 @@ describe('Select :: Search', () => {
       const optionsWrapper = container.querySelectorAll(css('__optionsWrapper'))
       expect(optionsWrapper).toHaveLength(1)
 
-      const inputEl = container.querySelector('input') as HTMLElement
-
       // searching with a string shorter than min length should not trigger search
+      const inputEl = container.querySelector('input') as HTMLElement
       fireEvent.change(inputEl, { target: { value: 'hi' } })
       jest.advanceTimersByTime(debounceTimeout)
       await wait(() => {
@@ -265,8 +261,6 @@ describe('Select :: Search', () => {
     })
 
     it('resets options and ignores any pending debounced searches if search is empty', async () => {
-      const debounceTimeout = DEFAULT_ASYNC_SEARCH_DEBOUNCE
-      const testTimeout = 100
       const asyncSearch = jest.fn(() => {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -286,7 +280,6 @@ describe('Select :: Search', () => {
       expect(optionsWrapper).toHaveLength(1)
 
       const inputEl = container.querySelector('input') as HTMLElement
-
       fireEvent.change(inputEl, { target: { value: 'hi' } })
       jest.advanceTimersByTime(debounceTimeout)
       await wait(() => {
@@ -308,6 +301,40 @@ describe('Select :: Search', () => {
       options.forEach(result => {
         expect(getAllByText(getUserFullName(result)).length).toBeGreaterThan(0)
       })
+    })
+
+    it('resets to default state if an async search is rejected', async () => {
+      const asyncSearch = jest.fn(() => {
+        return new Promise((_, reject) => {
+          setTimeout(() => {
+            reject(searchResultUserOptions)
+          }, testTimeout)
+        })
+      })
+
+      const { container } = render(
+        <Select {...defaultProps} asyncSearch={asyncSearch} />,
+      )
+
+      // just to be sure we get the menu open correctly...
+      const containerEl = container.querySelector(css('__container'))
+      fireEvent.mouseDown(containerEl as HTMLElement)
+      const optionsWrapper = container.querySelectorAll(css('__optionsWrapper'))
+      expect(optionsWrapper).toHaveLength(1)
+
+      // trigger search and wait for the rejection
+      const inputEl = container.querySelector('input') as HTMLElement
+      fireEvent.change(inputEl, { target: { value: 'hi' } })
+      jest.advanceTimersByTime(debounceTimeout)
+      await wait(() => {
+        jest.advanceTimersByTime(testTimeout)
+      })
+
+      // hides the loader and shows the "no options" message
+      expect(container.querySelectorAll(css('__loader'))).toHaveLength(0)
+      expect(
+        container.querySelectorAll(css(['__option', '__noOptionsMessage'])),
+      ).toHaveLength(1)
     })
   })
 })
