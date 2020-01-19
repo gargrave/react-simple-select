@@ -11,9 +11,13 @@ me (i.e. I cannot guarantee any level of support).
 
 ## Docs & Playgrounds
 
-You can see some working examples and play around with it interactively at this [interactive CodeSandbox project](https://codesandbox.io/s/react-simple-select019-8x2xq).
+You can see some working examples and play around with it interactively at this
+[interactive CodeSandbox project](https://codesandbox.io/s/react-simple-select019-8x2xq).
 
-Alternately, you can view the hosted [Styleguidist project](https://gargrave.github.io/react-simple-select). This is more useful for dev purposes, and I would lean on the CodeSandbox link more for learning purposes, but this is here if it helps!
+Alternately, you can view the hosted
+[Styleguidist project](https://gargrave.github.io/react-simple-select). This is
+more useful for dev purposes, and I would lean on the CodeSandbox link more for
+learning purposes, but this is here if it helps!
 
 ## Why?
 
@@ -38,8 +42,9 @@ it for production projects). But there are a few reasons I wanted to build this:
 
 - Install:
   - `yarn add @gargrave/react-simple-select`
-- Initialize the styles somewhere near the root of your project:
-  - `@import '@gargrave/react-simple-select/dist/react-simple-select.css'`
+- Pull in the default CSS to initialize the styles somewhere near the root of
+  your project:
+  - `import '@gargrave/react-simple-select/dist/react-simple-select.css'`
   - Technically, you don't _have_ to import these styles, but this does apply
     the default styling to the component, which I think you will in most cases.
     (You can pass in custom styles to override the defaults if you wish.)
