@@ -12,7 +12,7 @@ me (i.e. I cannot guarantee any level of support).
 ## Docs & Playgrounds
 
 You can see some working examples and play around with it interactively at this
-[interactive CodeSandbox project](https://codesandbox.io/s/react-simple-select019-8x2xq).
+[interactive CodeSandbox project](https://codesandbox.io/s/react-simple-select0110-vkmbk).
 
 Alternately, you can view the hosted
 [Styleguidist project](https://gargrave.github.io/react-simple-select). This is
