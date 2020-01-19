@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { SelectProps } from './Select'
+
 export const DEFAULT_CSS_CLASS_BASE = 'reactSimpleSelect'
 export const DEFAULT_NO_OPTIONS_MESSAGE = 'No Options'
 export const DEFAULT_PLACEHOLDER = 'Select...'
@@ -34,4 +37,19 @@ export const styles = {
   selectInput: css('__selectInput'),
   selected: css('__selected'),
   svgWrapper: css('__svgWrapper'),
+}
+
+export const filterOptionsBySearch = (
+  props: SelectProps,
+  searchString: string,
+): any[] => {
+  const { options = [] } = props
+  const getOptionLabel = props.getOptionLabel ?? DEFAULT_GET_OPTION_LABEL
+
+  const filterOptions = (option: string) =>
+    getOptionLabel(option)
+      .toLowerCase()
+      .includes(searchString.toLowerCase())
+
+  return options.filter(filterOptions)
 }

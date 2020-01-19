@@ -1,16 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { wrap } from '../../utils'
-import { DEFAULT_GET_OPTION_LABEL } from './Select.helpers'
+import { filterOptionsBySearch } from './Select.helpers'
 import { SelectProps } from './Select'
-
-const getFilteredOptions = (props: SelectProps, inputValue: string): any[] => {
-  const { getOptionLabel = DEFAULT_GET_OPTION_LABEL, options = [] } = props
-  const filterer = (option: string) =>
-    getOptionLabel!(option) // eslint-disable-line
-      .toLowerCase()
-      .includes(inputValue)
-  return options.filter(filterer)
-}
 
 export enum SelectActionType {
   focus,
@@ -79,7 +70,7 @@ export const reducer = (
     case SelectActionType.inputChange: {
       const props = action.props || ({} as SelectProps) // eslint-disable-line
       const value = action.payload?.inputValue ?? ''
-      const visibleOptions = getFilteredOptions(props, value)
+      const visibleOptions = filterOptionsBySearch(props, value)
 
       return {
         ...state,
