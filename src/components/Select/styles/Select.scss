@@ -30,7 +30,10 @@
 }
 
 @include style('__labelWrapper') {
+  display: flex;
+  justify-content: flex-start;
   margin-bottom: 4px;
+  padding-left: 2px;
 }
 
 @include style('__label') {
