@@ -12,7 +12,7 @@ export const DEFAULT_GET_OPTION_KEY = option => option
 export const DEFAULT_GET_OPTION_VALUE = option => option
 export const DEFAULT_GET_OPTION_LABEL = option => `${option}`
 
-export const TEST_ID_CLEAR_ICON = `${DEFAULT_CSS_CLASS_BASE}-icon-clear`
+export const DEFAULT_TEST_ID_CLEAR_ICON = `${DEFAULT_CSS_CLASS_BASE}-icon-clear`
 
 /**
  * A helper function to generate the full CSS class name

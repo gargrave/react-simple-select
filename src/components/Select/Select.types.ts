@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type RssElementsList = {
   active?: any
+  clearSelection?: any
   container?: any
   currentValue?: any
   disabled?: any
@@ -25,6 +26,7 @@ export type CustomStyleElementsList = RssElementsList
 
 export type TestIdElementsList = Pick<
   RssElementsList,
+  | 'clearSelection'
   | 'container'
   | 'currentValue'
   | 'inputWrapper'
@@ -35,7 +37,6 @@ export type TestIdElementsList = Pick<
   | 'noOptionsMessage'
   | 'optionsWrapper'
   | 'selectInput'
-  // svgWrapper''
 >
 
 export type AsyncSearchProps = {
@@ -173,6 +174,11 @@ export type SelectProps = AsyncSearchProps & {
    * **Default:** true
    */
   searchable?: boolean
+  /**
+   * **(Optional)** A key-value set of strings to be applied to various elements
+   * as data-testid attributes. All values are optional, so can you supply as many
+   * or as few as you want.
+   */
   testIds?: TestIdElementsList
   /**
    * **(Optional)** The currently-selected value (if any); if not value is selected, the placeholder text will be shown.

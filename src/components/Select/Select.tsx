@@ -14,8 +14,8 @@ import {
   DEFAULT_GET_OPTION_VALUE,
   DEFAULT_NO_OPTIONS_MESSAGE,
   DEFAULT_PLACEHOLDER,
+  DEFAULT_TEST_ID_CLEAR_ICON,
   styles,
-  TEST_ID_CLEAR_ICON,
 } from './Select.helpers'
 import { initialSelectState, reducer, SelectActionType } from './Select.reducer'
 import { SelectProps } from './Select.types'
@@ -44,8 +44,6 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     testIds = {},
     value,
   } = props
-
-  // TODO: log a warning about testIds.option (use getOptionTestId instead)
 
   const [state, dispatch] = React.useReducer(
     reducer,
@@ -406,8 +404,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             <SvgWrapper
               onMouseDown={handleClearClick}
               ref={closeIconRef}
-              // TODO: this needs to be added to custom data-testid list
-              testId={TEST_ID_CLEAR_ICON}
+              testId={testIds.clearSelection ?? DEFAULT_TEST_ID_CLEAR_ICON}
             >
               <ClearX />
             </SvgWrapper>

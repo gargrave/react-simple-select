@@ -5,7 +5,7 @@ import { cleanup, fireEvent, render } from '@testing-library/react'
 import {
   DEFAULT_NO_OPTIONS_MESSAGE,
   DEFAULT_PLACEHOLDER,
-  TEST_ID_CLEAR_ICON,
+  DEFAULT_TEST_ID_CLEAR_ICON,
 } from '../Select.helpers'
 import { SelectProps, TestIdElementsList } from '../Select.types'
 import {
@@ -91,7 +91,7 @@ describe('Select', () => {
       expect(q('.option')).toHaveLength(0)
 
       // does not render the "clear" button
-      expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
+      expect(queryByTestId(DEFAULT_TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
     })
   })
 
@@ -200,7 +200,7 @@ describe('Select', () => {
       const reducerSpy = jest.spyOn(reducerImports, 'reducer')
       const { onChange } = defaultProps
       const { getAllByTestId } = render(<Select {...defaultProps} />)
-      const clearIcon = getAllByTestId(TEST_ID_CLEAR_ICON)
+      const clearIcon = getAllByTestId(DEFAULT_TEST_ID_CLEAR_ICON)
 
       expect(clearIcon).toHaveLength(1)
       expect(onChange).toHaveBeenCalledTimes(0)
@@ -222,14 +222,14 @@ describe('Select', () => {
       const { queryByTestId } = render(
         <Select {...defaultProps} value={undefined} />,
       )
-      expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
+      expect(queryByTestId(DEFAULT_TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
     })
 
     it('never renders a "clear" icon when prop is false', () => {
       const { queryByTestId } = render(
         <Select {...defaultProps} clearable={false} />,
       )
-      expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
+      expect(queryByTestId(DEFAULT_TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
     })
   })
 
@@ -240,6 +240,7 @@ describe('Select', () => {
 
       const testId = key => `${key}__testId`
       const testIds: TestIdElementsList = {
+        clearSelection: testId('clearSelection'),
         container: testId('container'),
         currentValue: testId('currentValue'),
         inputWrapper: testId('inputWrapper'),
@@ -247,13 +248,11 @@ describe('Select', () => {
         labelWrapper: testId('labelWrapper'),
         optionsWrapper: testId('optionsWrapper'),
         selectInput: testId('selectInput'),
-        // svgWrapper
       }
 
       const { container, getAllByTestId } = render(
         <Select
           {...defaultProps}
-          clearable={false}
           getOptionTestId={mockGetOptionTestId}
           label="Excellent Label"
           testIds={testIds}
