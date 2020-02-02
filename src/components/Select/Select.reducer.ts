@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { wrap } from '../../utils'
 import { filterOptionsBySearch } from './Select.helpers'
-import { SelectProps } from './Select'
+import { SelectProps } from './Select.types'
 
 export enum SelectActionType {
   focus,

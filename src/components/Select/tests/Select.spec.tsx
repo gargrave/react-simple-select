@@ -7,6 +7,7 @@ import {
   DEFAULT_PLACEHOLDER,
   TEST_ID_CLEAR_ICON,
 } from '../Select.helpers'
+import { SelectProps } from '../Select.types'
 import {
   css,
   getUserFullName,
@@ -14,7 +15,7 @@ import {
   usersOptions as options,
 } from './testUtils'
 
-import { Select, SelectProps } from '../Select'
+import { Select } from '../Select'
 
 import * as reducerImports from '../Select.reducer' // import all for mocking
 const { SelectActionType } = reducerImports

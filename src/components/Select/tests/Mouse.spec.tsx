@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { cleanup, fireEvent, render } from '@testing-library/react'
 
 import { DEFAULT_PLACEHOLDER } from '../Select.helpers'
+import { SelectProps } from '../Select.types'
 import {
   css,
   getUserFullName,
@@ -10,7 +11,7 @@ import {
   usersOptions as options,
 } from './testUtils'
 
-import { Select, SelectProps } from '../Select'
+import { Select } from '../Select'
 
 import * as reducerImports from '../Select.reducer' // import all for mocking
 const { SelectActionType } = reducerImports

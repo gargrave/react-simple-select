@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SelectProps } from './Select'
+import { SelectProps } from './Select.types'
 
 export const DEFAULT_CSS_CLASS_BASE = 'reactSimpleSelect'
 export const DEFAULT_NO_OPTIONS_MESSAGE = 'No Options'
@@ -14,9 +14,29 @@ export const DEFAULT_GET_OPTION_LABEL = option => `${option}`
 
 export const TEST_ID_CLEAR_ICON = `${DEFAULT_CSS_CLASS_BASE}-icon-clear`
 
+/**
+ * A helper function to generate the full CSS class name
+ * on top of the shared base class name.
+ *
+ * e.g. If base class name is `reactSimpleSelect`, calling this with `__label`
+ * would return teh full string `reactSimpleSelect__label`.
+ * @param className
+ */
 export const css = (className: string): string =>
   `${DEFAULT_CSS_CLASS_BASE}${className}`
 
+/**
+ * A map of pre-built style names for the default styling for the Select component.
+ * This is mostly a convenience to simplify and shorten the application of some
+ * fairly long and repetitive names. It also gives a "faux CSS Modules" style
+ * naming convention, of being able to apply CSS classes with type completion.
+ *
+ * In general, these should be used when applying default styles to Select,
+ * rather than setting them as strings.
+ *
+ * Something like:
+ * `<div className={styles.active} />`
+ */
 export const styles = {
   active: css('__active'),
   container: css('__container'),
@@ -39,6 +59,13 @@ export const styles = {
   svgWrapper: css('__svgWrapper'),
 }
 
+/**
+ * A simple default search/filter function for the provided set of options.
+ * Performs a simple case-insensitive search between the search term
+ * and the parsed label of each option in the current set.
+ * @param props
+ * @param searchString
+ */
 export const filterOptionsBySearch = (
   props: SelectProps,
   searchString: string,

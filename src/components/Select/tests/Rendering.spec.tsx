@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render } from '@testing-library/react'
 
 import { Keys } from '../../../utils'
 import * as reducerImports from '../Select.reducer'
+import { SelectProps } from '../Select.types'
 import {
   css,
   getUserFullName,
@@ -11,7 +12,7 @@ import {
   usersOptions as options,
 } from './testUtils'
 
-import { Select, SelectProps } from '../Select'
+import { Select } from '../Select'
 
 describe('Select :: Rendering', () => {
   let defaultProps: SelectProps

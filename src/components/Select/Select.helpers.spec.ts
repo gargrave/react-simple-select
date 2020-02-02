@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect'
 
 import { filterOptionsBySearch } from './Select.helpers'
-import { SelectProps } from './Select'
+import { SelectProps } from './Select.types'
 
 describe('Select helpers', () => {
   beforeEach(() => {
