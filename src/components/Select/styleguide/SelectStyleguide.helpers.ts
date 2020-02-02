@@ -1,8 +1,9 @@
-import { name, random } from 'faker'
+import nanoid from 'nanoid'
+import { name } from 'faker'
 
 const makePerson = () => ({
   firstName: name.firstName(),
-  id: random.uuid(),
+  id: nanoid(),
   lastName: name.lastName(),
 })
 

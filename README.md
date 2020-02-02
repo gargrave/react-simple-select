@@ -48,6 +48,8 @@ it for production projects). But there are a few reasons I wanted to build this:
   - Technically, you don't _have_ to import these styles, but this does apply
     the default styling to the component, which I think you will in most cases.
     (You can pass in custom styles to override the defaults if you wish.)
+  - Note that this is a plain old un-minified CSS file. The assumption is that
+    your build process will handle "compiling" it however is best for your app.
 - Use the `Select` component in your project! A _very_ rough example might look
   something like this. (Until I have better docs, you can take a look at my
   [demo project](https://github.com/gargrave/react-simple-select-demo/blob/master/src/demo/DemoTS.tsx))
@@ -57,13 +59,13 @@ it for production projects). But there are a few reasons I wanted to build this:
 These are few items on my current road map, although I don't have any specific
 ETA:
 
-- [ ] Customizable styling (in progress)
+- [ ] Customizable styling (coming soon)
 - [ ] Accessibility additions (e.g. better ARIA handling for current lists)
 - [ ] Custom option rendering (e.g. render options as components instead of just
       strings)
-- [ ] Add ability to specify `data-testid` attributes to all "testable" parts of
-      the component
 - [ ] Groupable options
 - [ ] Editable options (i.e. type to add a new option)
 - [ ] Multi-select
 - [x] Async searching/loading
+- [x] Add ability to specify `data-testid` attributes to all "testable" parts of
+      the component
