@@ -54,6 +54,7 @@ export type SelectProps = AsyncSearchProps & {
    * <pre>(user: User) => user.id</pre>
    */
   getOptionKey?: (option: any) => string
+  getOptionTestId?: (option: any, idx: number) => string
   /**
    * **(Optional)** Custom parsing function for specifying how to render the labels that will be
    * shown for each option in the dropdown. By default, this will be simply be a stringified version

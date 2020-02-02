@@ -10,7 +10,7 @@ export const css = (classNames: string | string[]): string =>
     : [classNames].map(cssMap)
   ).join('')
 
-type User = {
+export type User = {
   firstName: string
   id: string
   lastName: string

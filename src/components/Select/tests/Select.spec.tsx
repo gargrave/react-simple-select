@@ -12,6 +12,7 @@ import {
   css,
   getUserFullName,
   getUserIdString,
+  User,
   usersOptions as options,
 } from './testUtils'
 
@@ -224,6 +225,38 @@ describe('Select', () => {
         <Select {...defaultProps} clearable={false} />,
       )
       expect(queryByTestId(TEST_ID_CLEAR_ICON)).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Test ID', () => {
+    it('applies custom data-testid attributes when specified', () => {
+      const userDataTestId = (option: User, idx: number) => `user_${idx}`
+      const mockGetOptionTestId = jest.fn(userDataTestId)
+
+      const { container, getAllByTestId } = render(
+        <Select
+          {...defaultProps}
+          clearable={false}
+          getOptionTestId={mockGetOptionTestId}
+        />,
+      )
+      const q = query => container.querySelectorAll(query)
+
+      const containerEl = container.querySelector(
+        css('__container'),
+      ) as HTMLElement
+
+      fireEvent.mouseDown(containerEl)
+      // just to be sure the menu opened correctly...
+      expect(q(css('__optionsWrapper'))).toHaveLength(1)
+      expect(q(css('__option'))).toHaveLength(options.length)
+
+      // test that each user test ID was individually applied
+      expect(mockGetOptionTestId).toHaveBeenCalledTimes(options.length)
+      options.forEach((option, i) => {
+        expect(mockGetOptionTestId).toHaveBeenNthCalledWith(i + 1, option, i)
+        expect(getAllByTestId(userDataTestId(option, i))).toHaveLength(1)
+      })
     })
   })
 })

@@ -22,21 +22,6 @@ import { SelectProps } from './Select.types'
 
 let nextId = 0
 
-/**
- * This is the primary component exported from react-simple-select.
- *
- * In case you're not familiar with Styleguidist, here a couple of things you can do:
- *
- * - Clicking on the `Props & Methods` button directly below this text will show you full
- *    docs on all of the props this component can take. (I have done my best to document
- *    them as clearly as possible.)
- * - Clicking on the `View Code` button beneath any example will expand an interactive
- *    code editor which not only shows you the code for the example, but also allows you
- *    to edit it inline, which will hot reload said example. This is a good way to quickly
- *    experience with different props and settings.
- *
- * @visibleName Select
- */
 export const Select: React.FC<SelectProps> = React.memo(props => {
   const {
     asyncSearch,
@@ -47,6 +32,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     disabled = false,
     getOptionKey = DEFAULT_GET_OPTION_KEY,
     getOptionLabel = DEFAULT_GET_OPTION_LABEL,
+    getOptionTestId,
     getOptionValue = DEFAULT_GET_OPTION_VALUE,
     label,
     noOptionsMessage = DEFAULT_NO_OPTIONS_MESSAGE,
@@ -422,6 +408,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             {visibleOptions.length ? (
               visibleOptions.map((option, idx) => {
                 const key = getOptionKey ? getOptionKey(option) : idx
+                const testId = getOptionTestId && getOptionTestId(option, idx)
 
                 const isHighlighted = idx === highlightedIdx
                 const isSelected =
@@ -437,6 +424,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
                       [styles.selected]: isSelected,
                       [styles.disabled]: isDisabled,
                     })}
+                    data-testid={testId}
                     key={key}
                     onClick={
                       isDisabled ? undefined : () => handleOptionClick(option)
