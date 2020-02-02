@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SelectProps } from './Select.types'
+import { CustomStyleElementsList, SelectProps } from './Select.types'
 
 export const DEFAULT_CSS_CLASS_BASE = 'reactSimpleSelect'
 export const DEFAULT_NO_OPTIONS_MESSAGE = 'No Options'
@@ -37,7 +37,7 @@ export const css = (className: string): string =>
  * Something like:
  * `<div className={styles.active} />`
  */
-export const styles = {
+export const styles: CustomStyleElementsList = {
   active: css('__active'),
   container: css('__container'),
   currentValue: css('__currentValue'),

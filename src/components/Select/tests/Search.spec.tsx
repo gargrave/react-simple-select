@@ -8,7 +8,7 @@ import {
   DEFAULT_NO_OPTIONS_MESSAGE,
   DEFAULT_PLACEHOLDER,
 } from '../Select.helpers'
-import { SelectProps } from '../Select.types'
+import { SelectProps, TestIdElementList } from '../Select.types'
 import {
   css,
   getUserFullName,
@@ -95,8 +95,22 @@ describe('Select :: Search', () => {
         })
       })
 
-      const { container, getAllByText, queryAllByText } = render(
-        <Select {...defaultProps} asyncSearch={asyncSearch} />,
+      const testIds: TestIdElementList = {
+        loader: 'loader__testId',
+        loaderWrapper: 'loaderWrapper__testId',
+      }
+
+      const {
+        container,
+        getAllByTestId,
+        getAllByText,
+        queryAllByText,
+      } = render(
+        <Select
+          {...defaultProps}
+          asyncSearch={asyncSearch}
+          testIds={testIds}
+        />,
       )
 
       // just to be sure we get the menu open correctly...
@@ -146,6 +160,10 @@ describe('Select :: Search', () => {
       expect(queryAllByText(DEFAULT_NO_OPTIONS_MESSAGE)).toHaveLength(0)
       expect(getAllByText(DEFAULT_ASYNC_SEARCHING_TEXT)).toHaveLength(1)
       expect(container.querySelectorAll(css('__loader'))).toHaveLength(1)
+      // ensure that test IDs are applied to loader
+      Object.values(testIds).forEach(id => {
+        expect(getAllByTestId(id)).toHaveLength(1)
+      })
 
       // asyncSearch callback is triggered with the current value
       jest.advanceTimersByTime(debounceTimeout)

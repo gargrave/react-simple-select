@@ -1,4 +1,43 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+type RssElementsList = {
+  active?: any
+  container?: any
+  currentValue?: any
+  disabled?: any
+  hidden?: any
+  highlighted?: any
+  inputWrapper?: any
+  label?: any
+  labelWrapper?: any
+  loader?: any
+  loaderItem?: any
+  loaderWrapper?: any
+  noOptionsMessage?: any
+  option?: any
+  optionsWrapper?: any
+  placeholder?: any
+  selectInput?: any
+  selected?: any
+  svgWrapper?: any
+}
+
+export type CustomStyleElementsList = RssElementsList
+
+export type TestIdElementsList = Pick<
+  RssElementsList,
+  | 'container'
+  | 'currentValue'
+  | 'inputWrapper'
+  | 'label'
+  | 'labelWrapper'
+  | 'loader'
+  | 'loaderWrapper'
+  | 'noOptionsMessage'
+  | 'optionsWrapper'
+  | 'selectInput'
+  // svgWrapper''
+>
+
 export type AsyncSearchProps = {
   /**
    * (Optional) Callback to provide async search capabilities.
@@ -54,6 +93,15 @@ export type SelectProps = AsyncSearchProps & {
    * <pre>(user: User) => user.id</pre>
    */
   getOptionKey?: (option: any) => string
+  /**
+   * **(Optional)** A function to parse data-testid attributes for each individual option.
+   * This is useful to set a test ID that is unique for every option.
+   *
+   * Note that there is no default value for this. If nothing is provided
+   * for this prop, no data-testid attribute will be applied to options.
+   * @param option
+   * @param idx
+   */
   getOptionTestId?: (option: any, idx: number) => string
   /**
    * **(Optional)** Custom parsing function for specifying how to render the labels that will be
@@ -125,6 +173,7 @@ export type SelectProps = AsyncSearchProps & {
    * **Default:** true
    */
   searchable?: boolean
+  testIds?: TestIdElementsList
   /**
    * **(Optional)** The currently-selected value (if any); if not value is selected, the placeholder text will be shown.
    *

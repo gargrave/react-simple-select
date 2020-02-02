@@ -7,7 +7,7 @@ import {
   DEFAULT_PLACEHOLDER,
   TEST_ID_CLEAR_ICON,
 } from '../Select.helpers'
-import { SelectProps } from '../Select.types'
+import { SelectProps, TestIdElementsList } from '../Select.types'
 import {
   css,
   getUserFullName,
@@ -97,8 +97,12 @@ describe('Select', () => {
 
   describe('"No Options" messaging', () => {
     it('displays a default "no options" message when options list is empty', () => {
-      const { container, getByText, queryByText } = render(
-        <Select {...defaultProps} options={[]} />,
+      const testIds: TestIdElementsList = {
+        noOptionsMessage: 'noOptionsMessage__testId',
+      }
+
+      const { container, getAllByTestId, getByText, queryByText } = render(
+        <Select {...defaultProps} options={[]} testIds={testIds} />,
       )
 
       const q = query => container.querySelectorAll(query)
@@ -109,6 +113,7 @@ describe('Select', () => {
       )
       expect(getByText(DEFAULT_NO_OPTIONS_MESSAGE)).toBeInTheDocument()
       expect(q(css('__noOptionsMessage'))).toHaveLength(1)
+      expect(getAllByTestId(testIds.noOptionsMessage)).toHaveLength(1)
     })
 
     it('displays a custom "no options" message when provided', () => {
@@ -233,11 +238,25 @@ describe('Select', () => {
       const userDataTestId = (option: User, idx: number) => `user_${idx}`
       const mockGetOptionTestId = jest.fn(userDataTestId)
 
+      const testId = key => `${key}__testId`
+      const testIds: TestIdElementsList = {
+        container: testId('container'),
+        currentValue: testId('currentValue'),
+        inputWrapper: testId('inputWrapper'),
+        label: testId('label'),
+        labelWrapper: testId('labelWrapper'),
+        optionsWrapper: testId('optionsWrapper'),
+        selectInput: testId('selectInput'),
+        // svgWrapper
+      }
+
       const { container, getAllByTestId } = render(
         <Select
           {...defaultProps}
           clearable={false}
           getOptionTestId={mockGetOptionTestId}
+          label="Excellent Label"
+          testIds={testIds}
         />,
       )
       const q = query => container.querySelectorAll(query)
@@ -256,6 +275,11 @@ describe('Select', () => {
       options.forEach((option, i) => {
         expect(mockGetOptionTestId).toHaveBeenNthCalledWith(i + 1, option, i)
         expect(getAllByTestId(userDataTestId(option, i))).toHaveLength(1)
+      })
+
+      // test that every other specified test ID is applied
+      Object.values(testIds).forEach(id => {
+        expect(getAllByTestId(id)).toHaveLength(1)
       })
     })
   })

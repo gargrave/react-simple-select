@@ -41,8 +41,11 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
     optionIsDisabled,
     placeholder = DEFAULT_PLACEHOLDER,
     searchable = true,
+    testIds = {},
     value,
   } = props
+
+  // TODO: log a warning about testIds.option (use getOptionTestId instead)
 
   const [state, dispatch] = React.useReducer(
     reducer,
@@ -344,8 +347,15 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
   return (
     <>
       {label && (
-        <div className={classNames(styles.labelWrapper)}>
-          <label className={classNames(styles.label)} id={labelId}>
+        <div
+          className={classNames(styles.labelWrapper)}
+          data-testid={testIds.labelWrapper}
+        >
+          <label
+            className={classNames(styles.label)}
+            data-testid={testIds.label}
+            id={labelId}
+          >
             {label}
           </label>
         </div>
@@ -356,6 +366,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
         className={classNames(styles.container, {
           [styles.disabled]: disabled,
         })}
+        data-testid={testIds.container}
         ref={containerRef}
       >
         <div
@@ -363,12 +374,14 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             [styles.active]: active,
             [styles.disabled]: disabled,
           })}
+          data-testid={testIds.inputWrapper}
         >
           <div
             className={classNames(styles.currentValue, {
               [styles.hidden]: !!inputValue,
               [styles.placeholder]: !value,
             })}
+            data-testid={testIds.currentValue}
           >
             {displayValue}
           </div>
@@ -377,6 +390,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             className={classNames(styles.selectInput, {
               [styles.disabled]: disabled,
             })}
+            data-testid={testIds.selectInput}
             disabled={disabled}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
@@ -386,12 +400,13 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             value={inputValue}
           />
 
-          {searching && <Loader />}
+          {searching && <Loader testIds={testIds} />}
 
           {shouldRenderClearIcon && (
             <SvgWrapper
               onMouseDown={handleClearClick}
               ref={closeIconRef}
+              // TODO: this needs to be added to custom data-testid list
               testId={TEST_ID_CLEAR_ICON}
             >
               <ClearX />
@@ -404,7 +419,11 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
         </div>
 
         {menuIsOpen && (
-          <div className={classNames(styles.optionsWrapper)} ref={menuRef}>
+          <div
+            className={classNames(styles.optionsWrapper)}
+            data-testid={testIds.optionsWrapper}
+            ref={menuRef}
+          >
             {visibleOptions.length ? (
               visibleOptions.map((option, idx) => {
                 const key = getOptionKey ? getOptionKey(option) : idx
@@ -443,6 +462,7 @@ export const Select: React.FC<SelectProps> = React.memo(props => {
             ) : (
               <div
                 className={classNames(styles.option, styles.noOptionsMessage)}
+                data-testid={testIds.noOptionsMessage}
               >
                 {searching ? asyncSearchingText : noOptionsMessage}
               </div>
